@@ -13,6 +13,7 @@
 		AA0100000000000C /* View+LiquidGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0100000000000C /* View+LiquidGlass.swift */; };
 		AA01000000000028 /* NetflixWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000028 /* NetflixWebView.swift */; };
 		AA01000000000029 /* NetflixWebViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000029 /* NetflixWebViewContainer.swift */; };
+		AA01000000000030 /* LiquidGlassPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000030 /* LiquidGlassPill.swift */; };
 		AA0100000000001E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0100000000001E /* SettingsView.swift */; };
 		AA01000000000025 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF01000000000025 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,7 @@
 		AF0100000000000C /* View+LiquidGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+LiquidGlass.swift"; sourceTree = "<group>"; };
 		AF01000000000028 /* NetflixWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetflixWebView.swift; sourceTree = "<group>"; };
 		AF01000000000029 /* NetflixWebViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetflixWebViewContainer.swift; sourceTree = "<group>"; };
+		AF01000000000030 /* LiquidGlassPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassPill.swift; sourceTree = "<group>"; };
 		AF0100000000001E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AF01000000000025 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AF01000000000026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				AF01000000000029 /* NetflixWebViewContainer.swift */,
+				AF01000000000030 /* LiquidGlassPill.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 				AA0100000000000C /* View+LiquidGlass.swift in Sources */,
 				AA01000000000028 /* NetflixWebView.swift in Sources */,
 				AA01000000000029 /* NetflixWebViewContainer.swift in Sources */,
+				AA01000000000030 /* LiquidGlassPill.swift in Sources */,
 				AA0100000000001E /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
