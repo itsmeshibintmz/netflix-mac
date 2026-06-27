@@ -162,7 +162,7 @@ struct OnboardingView: View {
 
                     // Email
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Email or phone").font(.caption).foregroundStyle(.netflixLightGray)
+                        Text("Email or phone").font(.caption).foregroundStyle(Color.netflixLightGray)
                         TextField("", text: $email)
                             .textFieldStyle(.plain)
                             .foregroundStyle(.white)
@@ -172,7 +172,7 @@ struct OnboardingView: View {
 
                     // Password
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Password").font(.caption).foregroundStyle(.netflixLightGray)
+                        Text("Password").font(.caption).foregroundStyle(Color.netflixLightGray)
                         SecureField("", text: $password)
                             .textFieldStyle(.plain)
                             .foregroundStyle(.white)
@@ -203,11 +203,23 @@ struct OnboardingView: View {
                         withAnimation { showSignIn = false }
                     }
                     .font(.subheadline)
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
                     .buttonStyle(.plain)
                 }
                 .padding(32)
-                .floatingGlass()
+                .background {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .strokeBorder(
+                                    LinearGradient(colors: [.white.opacity(0.35), .white.opacity(0.08)],
+                                                   startPoint: .topLeading, endPoint: .bottomTrailing),
+                                    lineWidth: 1
+                                )
+                        )
+                        .shadow(color: .black.opacity(0.3), radius: 30, y: 15)
+                }
                 .frame(maxWidth: 420)
             }
 

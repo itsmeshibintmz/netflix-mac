@@ -44,7 +44,7 @@ struct CastCard: View {
                 } else {
                     Image(systemName: "person.fill")
                         .font(.system(size: 30))
-                        .foregroundStyle(.netflixLightGray)
+                        .foregroundStyle(Color.netflixLightGray)
                 }
             }
             .shadow(color: .black.opacity(0.4), radius: 8, y: 4)
@@ -61,7 +61,7 @@ struct CastCard: View {
             if let char = member.character, !char.isEmpty {
                 Text(char)
                     .font(.system(size: 11))
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
                     .lineLimit(1)
                     .frame(width: 80)
             }

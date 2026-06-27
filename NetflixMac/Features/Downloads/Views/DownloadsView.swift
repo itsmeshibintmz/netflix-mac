@@ -86,13 +86,13 @@ struct DownloadsView: View {
 
             Text("Downloaded titles will appear here for offline viewing.\nOpen a title's detail page and tap Download.")
                 .font(.callout)
-                .foregroundStyle(.netflixLightGray)
+                .foregroundStyle(Color.netflixLightGray)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
 
             Text("Powered by AVAssetDownloadURLSession")
                 .font(.caption)
-                .foregroundStyle(.netflixMidGray)
+                .foregroundStyle(Color.netflixMidGray)
                 .padding(.top, 4)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -27,7 +27,7 @@ struct MyListView: View {
                                     .foregroundStyle(.white)
                                 Text("\(watchlist.items.count) title\(watchlist.items.count == 1 ? "" : "s")")
                                     .font(.subheadline)
-                                    .foregroundStyle(.netflixLightGray)
+                                    .foregroundStyle(Color.netflixLightGray)
                             }
                             Spacer()
                         }
@@ -73,7 +73,7 @@ struct MyListView: View {
 
             Text("Browse content and tap + to save titles here.")
                 .font(.callout)
-                .foregroundStyle(.netflixLightGray)
+                .foregroundStyle(Color.netflixLightGray)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
         }

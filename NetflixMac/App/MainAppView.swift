@@ -113,14 +113,14 @@ struct SidebarView: View {
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(.white)
                         if profile.isKidsProfile {
-                            Text("Kids").font(.caption2).foregroundStyle(.netflixLightGray)
+                            Text("Kids").font(.caption2).foregroundStyle(Color.netflixLightGray)
                         }
                     }
                     Spacer()
                     Button { authVM.deselectProfile() } label: {
                         Image(systemName: "arrow.left.arrow.right.circle")
                             .font(.system(size: 14))
-                            .foregroundStyle(.netflixLightGray)
+                            .foregroundStyle(Color.netflixLightGray)
                     }
                     .buttonStyle(.plain)
                     .help("Switch profile")
@@ -159,7 +159,7 @@ struct SidebarView: View {
                     Text("Sign Out")
                         .font(.system(size: 14, weight: .medium))
                 }
-                .foregroundStyle(.netflixLightGray)
+                .foregroundStyle(Color.netflixLightGray)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 14)
             }
@@ -184,12 +184,12 @@ struct SidebarRow: View {
             HStack(spacing: 12) {
                 Image(systemName: item.icon)
                     .font(.system(size: 16, weight: isSelected ? .bold : .medium))
-                    .foregroundStyle(isSelected ? Color.netflixRed : isHovered ? .white : .netflixLightGray)
+                    .foregroundStyle(isSelected ? Color.netflixRed : isHovered ? .white : Color.netflixLightGray)
                     .frame(width: 22)
 
                 Text(item.rawValue)
                     .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
-                    .foregroundStyle(isSelected ? .white : isHovered ? .white : .netflixLightGray)
+                    .foregroundStyle(isSelected ? .white : isHovered ? .white : Color.netflixLightGray)
 
                 Spacer()
 

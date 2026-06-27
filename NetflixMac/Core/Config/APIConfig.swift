@@ -10,7 +10,22 @@ import Foundation
 enum APIConfig {
 
     // MARK: - 🔑 Your API Key
-    static let apiKey = "YOUR_TMDB_API_KEY_HERE"
+    static var apiKey: String {
+        // 1. Check custom overrides from SettingsView (saved in UserDefaults)
+        if let runtimeKey = UserDefaults.standard.string(forKey: "tmdb_api_key"), !runtimeKey.isEmpty {
+            return runtimeKey
+        }
+        
+        // 2. Read from Secrets.plist
+        if let path = Bundle.main.path(forResource: "Secrets", ofType: "plist"),
+           let dict = NSDictionary(contentsOfFile: path),
+           let fileKey = dict["TMDB_API_KEY"] as? String,
+           !fileKey.isEmpty && fileKey != "YOUR_TMDB_API_KEY_HERE" {
+            return fileKey
+        }
+        
+        return ""
+    }
 
     // MARK: - Base URLs
     static let baseURL       = "https://api.themoviedb.org/3"

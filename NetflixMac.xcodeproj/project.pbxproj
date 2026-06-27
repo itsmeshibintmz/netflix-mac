@@ -44,6 +44,7 @@
 		AA01000000000023 /* WatchlistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000023 /* WatchlistManager.swift */; };
 		AA01000000000024 /* PlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000024 /* PlaybackManager.swift */; };
 		AA01000000000025 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF01000000000025 /* Assets.xcassets */; };
+		AA01000000000027 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = AF01000000000027 /* Secrets.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,10 +86,29 @@
 		AF01000000000024 /* PlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackManager.swift; sourceTree = "<group>"; };
 		AF01000000000025 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AF01000000000026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AF01000000000027 /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		CC000000000000001 /* NetflixMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetflixMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		CC000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
+		FF000000000000000 = {
+			isa = PBXGroup;
+			children = (
+				FF000000000000001 /* NetflixMac */,
+				FF000000000000002 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
 		FF000000000000001 /* NetflixMac */ = {
 			isa = PBXGroup;
 			children = (
@@ -304,20 +324,20 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		FF00000000000001A /* MyList */ = {
-			isa = PBXGroup;
-			children = (
-				FF000000000000019 /* Views */,
-			);
-			path = MyList;
-			sourceTree = "<group>";
-		};
 		FF000000000000019 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				AF0100000000001C /* MyListView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		FF00000000000001A /* MyList */ = {
+			isa = PBXGroup;
+			children = (
+				FF000000000000019 /* Views */,
+			);
+			path = MyList;
 			sourceTree = "<group>";
 		};
 		FF00000000000001B /* Downloads */ = {
@@ -328,37 +348,12 @@
 			path = Downloads;
 			sourceTree = "<group>";
 		};
-		FF00000000000001F /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				AF0100000000001D /* DownloadsView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		FF00000000000001C /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				FF000000000000020 /* Views */,
 			);
 			path = Settings;
-			sourceTree = "<group>";
-		};
-		FF000000000000020 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				AF0100000000001E /* SettingsView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		FF00000000000001E /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				FF00000000000001D /* Components */,
-				FF00000000000001G /* Managers */,
-			);
-			path = Shared;
 			sourceTree = "<group>";
 		};
 		FF00000000000001D /* Components */ = {
@@ -372,6 +367,23 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		FF00000000000001E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				FF00000000000001D /* Components */,
+				FF00000000000001G /* Managers */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		FF00000000000001F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AF0100000000001D /* DownloadsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		FF00000000000001G /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -381,11 +393,20 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
+		FF000000000000020 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AF0100000000001E /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		FF000000000000021 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				AF01000000000025 /* Assets.xcassets */,
 				AF01000000000026 /* Info.plist */,
+				AF01000000000027 /* Secrets.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -418,7 +439,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					DD000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
@@ -433,7 +454,7 @@
 				en,
 				Base,
 			);
-			mainGroup = FF000000000000000 /* root */;
+			mainGroup = FF000000000000000;
 			productRefGroup = FF000000000000002 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -443,16 +464,17 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXGroup root */
-		FF000000000000000 = {
-			isa = PBXGroup;
-			children = (
-				FF000000000000001 /* NetflixMac */,
-				FF000000000000002 /* Products */,
+/* Begin PBXResourcesBuildPhase section */
+		CC000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA01000000000025 /* Assets.xcassets in Resources */,
+				AA01000000000027 /* Secrets.plist in Resources */,
 			);
-			sourceTree = "<group>";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXGroup root */
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CC000000000000002 /* Sources */ = {
@@ -500,27 +522,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXResourcesBuildPhase section */
-		CC000000000000003 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AA01000000000025 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		CC000000000000004 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
 /* Begin XCBuildConfiguration section */
 		DD000000000000002 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -545,6 +546,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
@@ -555,9 +557,12 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ZVYA8A77KY;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -577,6 +582,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -592,10 +598,14 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ZVYA8A77KY;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -607,20 +617,23 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
-		DD000000000000004 /* Debug - Target */ = {
+		DD000000000000004 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = NetflixMac/NetflixMac.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = ZVYA8A77KY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetflixMac/Resources/Info.plist;
@@ -639,15 +652,17 @@
 			};
 			name = Debug;
 		};
-		DD000000000000005 /* Release - Target */ = {
+		DD000000000000005 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = NetflixMac/NetflixMac.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = ZVYA8A77KY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = NetflixMac/Resources/Info.plist;
@@ -688,7 +703,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
 	};
 	rootObject = EE000000000000001 /* Project object */;
 }

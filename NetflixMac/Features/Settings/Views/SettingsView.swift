@@ -32,7 +32,7 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("TMDB API Key")
                             .font(.system(size: 13, weight: .semibold))
-                            .foregroundStyle(.netflixLightGray)
+                            .foregroundStyle(Color.netflixLightGray)
 
                         TextField("Enter your TMDB API key…", text: $apiKeyOverride)
                             .textFieldStyle(.plain)
@@ -40,7 +40,7 @@ struct SettingsView: View {
                             .foregroundStyle(.white)
                             .padding(10)
                             .liquidGlass(cornerRadius: 8)
-                            .onChange(of: apiKeyOverride) { _, new in
+                            .onChange(of: apiKeyOverride) { newValue in
                                 // Could propagate to APIConfig at runtime
                             }
 
@@ -174,7 +174,7 @@ struct InfoRow: View {
         HStack {
             Text(label)
                 .font(.system(size: 13))
-                .foregroundStyle(.netflixLightGray)
+                .foregroundStyle(Color.netflixLightGray)
             Spacer()
             Text(value)
                 .font(.system(size: 13, weight: .medium))

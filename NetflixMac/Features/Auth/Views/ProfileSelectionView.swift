@@ -20,7 +20,7 @@ struct ProfileSelectionView: View {
                         .foregroundStyle(.white)
                     Text("Select your profile to continue.")
                         .font(.system(size: 16))
-                        .foregroundStyle(.netflixLightGray)
+                        .foregroundStyle(Color.netflixLightGray)
                 }
                 .padding(.top, 60)
 
@@ -47,7 +47,7 @@ struct ProfileSelectionView: View {
                 // Sign Out
                 Button("Sign out") { authVM.signOut() }
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
                     .buttonStyle(.plain)
                     .padding(.top, 8)
 
@@ -100,7 +100,7 @@ struct ProfileAvatarView: View {
                 if profile.isKidsProfile {
                     Text("KIDS")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(.netflixLightGray)
+                        .foregroundStyle(Color.netflixLightGray)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)
                         .background(Capsule().fill(Color.netflixMidGray))
@@ -130,7 +130,7 @@ struct AddProfileButton: View {
                     .overlay(
                         Image(systemName: "plus")
                             .font(.system(size: 36, weight: .light))
-                            .foregroundStyle(.netflixLightGray)
+                            .foregroundStyle(Color.netflixLightGray)
                     )
                     .overlay(
                         Circle().strokeBorder(
@@ -142,7 +142,7 @@ struct AddProfileButton: View {
 
                 Text("Add Profile")
                     .font(.system(size: 15))
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
             }
             .frame(width: 120)
         }
@@ -184,7 +184,7 @@ struct AddProfileSheet: View {
                 .liquidGlass(cornerRadius: 10)
 
             // Icon picker
-            Text("Choose Avatar").font(.subheadline).foregroundStyle(.netflixLightGray)
+            Text("Choose Avatar").font(.subheadline).foregroundStyle(Color.netflixLightGray)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 12) {
                 ForEach(icons, id: \.self) { icon in
                     Button {
@@ -192,7 +192,7 @@ struct AddProfileSheet: View {
                     } label: {
                         Image(systemName: icon)
                             .font(.system(size: 32))
-                            .foregroundStyle(selectedIcon == icon ? .netflixRed : .netflixLightGray)
+                            .foregroundStyle(selectedIcon == icon ? Color.netflixRed : Color.netflixLightGray)
                             .frame(width: 60, height: 60)
                             .background(
                                 Circle().fill(selectedIcon == icon ? Color.netflixRed.opacity(0.15) : Color.netflixDarkGray)
@@ -203,7 +203,7 @@ struct AddProfileSheet: View {
             }
 
             // Color picker
-            Text("Color").font(.subheadline).foregroundStyle(.netflixLightGray)
+            Text("Color").font(.subheadline).foregroundStyle(Color.netflixLightGray)
             HStack(spacing: 12) {
                 ForEach(colors, id: \.self) { color in
                     Button { selectedColor = color } label: {
@@ -226,7 +226,7 @@ struct AddProfileSheet: View {
             // Buttons
             HStack(spacing: 12) {
                 Button("Cancel") { dismiss() }
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
                     .buttonStyle(.plain)
 
                 Spacer()
@@ -239,7 +239,19 @@ struct AddProfileSheet: View {
         }
         .padding(32)
         .frame(width: 380)
-        .floatingGlass()
+        .background {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .strokeBorder(
+                            LinearGradient(colors: [.white.opacity(0.35), .white.opacity(0.08)],
+                                           startPoint: .topLeading, endPoint: .bottomTrailing),
+                            lineWidth: 1
+                        )
+                )
+                .shadow(color: .black.opacity(0.3), radius: 30, y: 15)
+        }
         .background(Color.netflixDarkBG)
         .preferredColorScheme(.dark)
     }

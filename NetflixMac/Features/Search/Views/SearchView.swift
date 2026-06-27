@@ -44,7 +44,7 @@ struct SearchView: View {
             HStack(spacing: 10) {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(vm.query.isEmpty ? .netflixLightGray : .white)
+                    .foregroundStyle(vm.query.isEmpty ? Color.netflixLightGray : .white)
 
                 TextField("Search movies, shows, actors…", text: $vm.query)
                     .textFieldStyle(.plain)
@@ -55,7 +55,7 @@ struct SearchView: View {
                 if !vm.query.isEmpty {
                     Button { vm.query = "" } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.netflixLightGray)
+                            .foregroundStyle(Color.netflixLightGray)
                     }
                     .buttonStyle(.plain)
                 }
@@ -110,12 +110,12 @@ struct SearchView: View {
                             } label: {
                                 HStack {
                                     Image(systemName: "clock.arrow.circlepath")
-                                        .foregroundStyle(.netflixLightGray)
+                                        .foregroundStyle(Color.netflixLightGray)
                                     Text(term)
                                         .foregroundStyle(.white)
                                     Spacer()
                                     Image(systemName: "arrow.up.left")
-                                        .foregroundStyle(.netflixLightGray)
+                                        .foregroundStyle(Color.netflixLightGray)
                                         .font(.caption)
                                 }
                                 .padding(.horizontal, 24)
@@ -129,7 +129,7 @@ struct SearchView: View {
 
                 Text("Tap a genre to explore")
                     .font(.subheadline)
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
                     .padding(.horizontal, 24)
                     .padding(.top, 8)
 
@@ -172,13 +172,13 @@ struct SearchView: View {
             Spacer()
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 44))
-                .foregroundStyle(.netflixMidGray)
+                .foregroundStyle(Color.netflixMidGray)
             Text("No results for \"\(vm.query)\"")
                 .font(.title3.bold())
                 .foregroundStyle(.white)
             Text("Try a different spelling or search term.")
                 .font(.callout)
-                .foregroundStyle(.netflixLightGray)
+                .foregroundStyle(Color.netflixLightGray)
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

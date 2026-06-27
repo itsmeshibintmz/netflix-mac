@@ -90,7 +90,7 @@ struct HomeView: View {
                 .tint(Color.netflixRed)
             Text("Loading content…")
                 .font(.headline)
-                .foregroundStyle(.netflixLightGray)
+                .foregroundStyle(Color.netflixLightGray)
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -108,7 +108,7 @@ struct HomeView: View {
                 .foregroundStyle(.white)
             Text(message)
                 .font(.callout)
-                .foregroundStyle(.netflixLightGray)
+                .foregroundStyle(Color.netflixLightGray)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
             NetflixPrimaryButton("Try Again") {

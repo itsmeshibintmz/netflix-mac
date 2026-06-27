@@ -118,12 +118,12 @@ struct DetailView: View {
                 if let r = displayItem.voteAverage { RatingBadge(rating: r) }
                 MaturityBadge(label: displayItem.maturityRating)
                 if !displayItem.year.isEmpty {
-                    Text(displayItem.year).foregroundStyle(.netflixLightGray)
+                    Text(displayItem.year).foregroundStyle(Color.netflixLightGray)
                 }
                 if displayItem.isMovie && !displayItem.runtimeString.isEmpty {
-                    Text(displayItem.runtimeString).foregroundStyle(.netflixLightGray)
+                    Text(displayItem.runtimeString).foregroundStyle(Color.netflixLightGray)
                 } else if let s = displayItem.numberOfSeasons {
-                    Text("\(s) Season\(s == 1 ? "" : "s")").foregroundStyle(.netflixLightGray)
+                    Text("\(s) Season\(s == 1 ? "" : "s")").foregroundStyle(Color.netflixLightGray)
                 }
             }
             .font(.system(size: 13))
@@ -132,7 +132,7 @@ struct DetailView: View {
             if let tagline = displayItem.tagline, !tagline.isEmpty {
                 Text("\"\(tagline)\"")
                     .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
                     .italic()
             }
 
@@ -150,7 +150,7 @@ struct DetailView: View {
                 HStack(spacing: 6) {
                     Text("Director:")
                         .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(.netflixLightGray)
+                        .foregroundStyle(Color.netflixLightGray)
                     Text(vm.director)
                         .font(.system(size: 13))
                         .foregroundStyle(.white)

@@ -23,6 +23,7 @@ struct VideoPlayerView: View {
     @State private var controlsTimer: Timer? = nil
     @State private var pipController: AVPictureInPictureController? = nil
     @State private var timeObserver: Any? = nil
+    @State private var keyMonitor: Any? = nil
 
     var body: some View {
         ZStack {
@@ -41,13 +42,24 @@ struct VideoPlayerView: View {
                     .transition(.opacity)
             }
         }
-        .onAppear { setupPlayer() }
-        .onDisappear { teardownPlayer() }
-        .onKeyPress(.space) { togglePlayPause(); return .handled }
-        .onKeyPress(.rightArrow) { seekForward(); return .handled }
-        .onKeyPress(.leftArrow)  { seekBackward(); return .handled }
-        .onKeyPress(.upArrow)    { adjustVolume(by: 0.1); return .handled }
-        .onKeyPress(.downArrow)  { adjustVolume(by: -0.1); return .handled }
+        .onAppear {
+            setupPlayer()
+            // NSEvent key monitor — works on macOS 13+
+            keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+                switch event.keyCode {
+                case 49:  self.togglePlayPause();       return nil  // Space
+                case 124: self.seekForward();            return nil  // →
+                case 123: self.seekBackward();           return nil  // ←
+                case 126: self.adjustVolume(by: 0.1);   return nil  // ↑
+                case 125: self.adjustVolume(by: -0.1);  return nil  // ↓
+                default:  return event
+                }
+            }
+        }
+        .onDisappear {
+            teardownPlayer()
+            if let monitor = keyMonitor { NSEvent.removeMonitor(monitor); keyMonitor = nil }
+        }
         .frame(minWidth: 640, minHeight: 400)
     }
 

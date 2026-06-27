@@ -36,10 +36,10 @@ struct AsyncPosterImage: View {
             VStack(spacing: 8) {
                 Image(systemName: "film")
                     .font(.system(size: 28))
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
                 Text("No Image")
                     .font(.caption)
-                    .foregroundStyle(.netflixLightGray)
+                    .foregroundStyle(Color.netflixLightGray)
             }
         }
     }

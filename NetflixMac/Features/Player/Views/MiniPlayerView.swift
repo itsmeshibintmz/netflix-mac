@@ -35,7 +35,7 @@ struct MiniPlayerView: View {
 
                         Text(item.year)
                             .font(.caption)
-                            .foregroundStyle(.netflixLightGray)
+                            .foregroundStyle(Color.netflixLightGray)
 
                         // Play/Pause
                         HStack(spacing: 16) {
@@ -56,10 +56,10 @@ struct MiniPlayerView: View {
                 VStack(spacing: 8) {
                     Image(systemName: "tv.slash")
                         .font(.system(size: 28))
-                        .foregroundStyle(.netflixMidGray)
+                        .foregroundStyle(Color.netflixMidGray)
                     Text("Nothing playing")
                         .font(.subheadline)
-                        .foregroundStyle(.netflixLightGray)
+                        .foregroundStyle(Color.netflixLightGray)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
