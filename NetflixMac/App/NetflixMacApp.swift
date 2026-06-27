@@ -19,5 +19,11 @@ struct NetflixMacApp: App {
             // Remove New Window command
             CommandGroup(replacing: .newItem) {}
         }
+
+        // Native Preferences Window (accessed via ⌘,)
+        Settings {
+            SettingsView()
+                .preferredColorScheme(.dark)
+        }
     }
 }

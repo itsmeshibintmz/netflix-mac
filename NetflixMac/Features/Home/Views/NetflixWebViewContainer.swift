@@ -9,6 +9,11 @@ struct NetflixWebViewContainer: View {
     @State private var isLoading = false
     @State private var commandCoordinator = NetflixWebView.CommandCoordinator()
 
+    // Binge watching + Appearance settings from UserDefaults
+    @AppStorage("autoSkipIntro") private var autoSkipIntro = true
+    @AppStorage("autoPlayNext") private var autoPlayNext = true
+    @AppStorage("pureOledBlack") private var pureOledBlack = false
+
     var body: some View {
         ZStack {
             Color.netflixBlack.ignoresSafeArea()
@@ -19,7 +24,10 @@ struct NetflixWebViewContainer: View {
                 canGoBack: $canGoBack,
                 canGoForward: $canGoForward,
                 isLoading: $isLoading,
-                commandCoordinator: commandCoordinator
+                commandCoordinator: commandCoordinator,
+                autoSkipIntro: autoSkipIntro,
+                autoPlayNext: autoPlayNext,
+                pureOledBlack: pureOledBlack
             )
             .ignoresSafeArea()
         }

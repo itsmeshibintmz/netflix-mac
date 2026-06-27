@@ -1,5 +1,5 @@
 // MARK: - NetflixWebView.swift
-// Native WKWebView wrapper for macOS featuring Safari User-Agent spoofing, DRM, and native HTML5 MediaSession integration.
+// Native WKWebView wrapper for macOS featuring Safari User-Agent spoofing, DRM, and settings injection.
 
 import SwiftUI
 import WebKit
@@ -9,6 +9,12 @@ struct NetflixWebView: NSViewRepresentable {
     @Binding var canGoBack: Bool
     @Binding var canGoForward: Bool
     @Binding var isLoading: Bool
+    let commandCoordinator: CommandCoordinator
+
+    // Preferences properties passed from container
+    let autoSkipIntro: Bool
+    let autoPlayNext: Bool
+    let pureOledBlack: Bool
 
     class CommandCoordinator {
         var goBackAction: (() -> Void)?
@@ -16,7 +22,6 @@ struct NetflixWebView: NSViewRepresentable {
         var reloadAction: (() -> Void)?
         var loadHomeAction: (() -> Void)?
     }
-    let commandCoordinator: CommandCoordinator
 
     func makeCoordinator() -> WebViewCoordinator {
         WebViewCoordinator(self)
@@ -26,7 +31,12 @@ struct NetflixWebView: NSViewRepresentable {
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = WKWebsiteDataStore.default()
 
-        // 1. Inject custom CSS to align elements and add modern styling
+        // 1. Initialize settings properties in JS at document start
+        let settingsSource = "window.macFlixSettings = { autoSkip: \(autoSkipIntro), autoNext: \(autoPlayNext), pureOled: \(pureOledBlack) };"
+        let settingsScript = WKUserScript(source: settingsSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(settingsScript)
+
+        // 2. Inject custom CSS to align elements and add modern styling
         let cssSource = """
         var style = document.createElement('style');
         style.innerHTML = `
@@ -59,9 +69,7 @@ struct NetflixWebView: NSViewRepresentable {
         let cssScript = WKUserScript(source: cssSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         configuration.userContentController.addUserScript(cssScript)
 
-        // 2. Inject JS script to feed video metadata directly to WebKit's native W3C MediaSession API.
-        // This integrates with macOS Lock Screen, Control Center, and Media Keys natively,
-        // preventing duplicate media player entries in the menu bar.
+        // 3. Inject JS script to feed video metadata to MediaSession API and execute background loop (Auto Skip/Play Next)
         let jsSource = """
         (function() {
             let video = null;
@@ -72,7 +80,6 @@ struct NetflixWebView: NSViewRepresentable {
                 let title = "Netflix";
                 let subtitle = "";
 
-                // Try to find the title inside Netflix's video overlay
                 let titleEl = document.querySelector('.video-title');
                 if (titleEl) {
                     let h4 = titleEl.querySelector('h4');
@@ -80,7 +87,6 @@ struct NetflixWebView: NSViewRepresentable {
                     if (h4) title = h4.innerText;
                     if (span) subtitle = span.innerText;
                 } else {
-                    // Fallback to document title
                     let docTitle = document.title;
                     if (docTitle && docTitle.startsWith("Netflix -")) {
                         title = docTitle.replace("Netflix -", "").trim();
@@ -96,12 +102,73 @@ struct NetflixWebView: NSViewRepresentable {
                 }
             }
 
+            // Global function called by Swift when settings change dynamically
+            window.updateAppPreferences = function() {
+                let settings = window.macFlixSettings || {};
+                
+                // Toggle OLED Black stylesheet
+                let oledStyle = document.getElementById('macflix-oled-style');
+                if (settings.pureOled) {
+                    if (!oledStyle) {
+                        oledStyle = document.createElement('style');
+                        oledStyle.id = 'macflix-oled-style';
+                        oledStyle.innerHTML = `
+                            body, .netflix-sans-font-loaded, .mainView, .watch-video, .pinning-header, .pinning-header-container {
+                                background-color: #000000 !important;
+                                background-image: none !important;
+                            }
+                        `;
+                        document.head.appendChild(oledStyle);
+                    }
+                } else {
+                    if (oledStyle) oledStyle.remove();
+                }
+            };
+
+            // Run initial styles check
+            setTimeout(window.updateAppPreferences, 1000);
+
+            // Binge monitoring loop (runs every 1 second)
             setInterval(() => {
+                let settings = window.macFlixSettings || {};
+
+                // 1. Auto-Skip Intro & Recaps
+                if (settings.autoSkip) {
+                    let skipBtn = document.querySelector('.watch-video--skip-content-button, [data-uia="player-skip-intro"], button.skip-credits');
+                    if (skipBtn) {
+                        skipBtn.click();
+                    } else {
+                        // Fallback text matching
+                        document.querySelectorAll('button, [role="button"]').forEach(btn => {
+                            let txt = btn.textContent || "";
+                            if (txt.includes("Skip Intro") || txt.includes("Skip Recap") || txt.includes("Skip Credits")) {
+                                btn.click();
+                            }
+                        });
+                    }
+                }
+
+                // 2. Auto-Play Next Episode
+                if (settings.autoNext) {
+                    let nextBtn = document.querySelector('button[data-uia="next-episode-seamless-button"], .watch-video--next-episode-button');
+                    if (nextBtn) {
+                        nextBtn.click();
+                    } else {
+                        // Fallback text matching
+                        document.querySelectorAll('button, [role="button"]').forEach(btn => {
+                            let txt = btn.textContent || "";
+                            if (txt.includes("Next Episode")) {
+                                btn.click();
+                            }
+                        });
+                    }
+                }
+
+                // 3. Media session update hooks
                 let el = document.querySelector('video');
                 if (el) {
                     if (video !== el) {
                         video = el;
-                        // Hook listeners to update metadata when playback changes
                         ['play', 'pause', 'durationchange'].forEach(evt => {
                             video.addEventListener(evt, updateMediaSession);
                         });
@@ -146,7 +213,20 @@ struct NetflixWebView: NSViewRepresentable {
         return webView
     }
 
-    func updateNSView(_ nsView: WKWebView, context: Context) {}
+    func updateNSView(_ nsView: WKWebView, context: Context) {
+        // Sync Swift settings changes to Javascript dynamically
+        let js = """
+        window.macFlixSettings = {
+            autoSkip: \(autoSkipIntro),
+            autoNext: \(autoPlayNext),
+            pureOled: \(pureOledBlack)
+        };
+        if (typeof window.updateAppPreferences === 'function') {
+            window.updateAppPreferences();
+        }
+        """
+        nsView.evaluateJavaScript(js, completionHandler: nil)
+    }
 
     // MARK: - WKWebView Coordinator
     class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
