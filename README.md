@@ -1,8 +1,6 @@
 # Netflix for macOS 🎬
 
-A beautiful, fully native macOS Netflix client built with **SwiftUI + Combine**, featuring **Apple's Liquid Glass design language**, MVVM architecture, and TMDB API integration.
-
-> **Personal use only.** Not affiliated with or endorsed by Netflix, Inc.
+A beautiful, native macOS Netflix desktop app wrapper built using **SwiftUI + WebKit (WKWebView)**, designed to provide a clean, edge-to-edge desktop streaming experience outside of a standard browser.
 
 ---
 
@@ -10,158 +8,68 @@ A beautiful, fully native macOS Netflix client built with **SwiftUI + Combine**,
 
 | Feature | Details |
 |---|---|
-| 🪟 Liquid Glass UI | `.ultraThinMaterial` sidebar, floating glass cards, specular highlights |
-| 🎬 Hero Banner | Full-bleed auto-cycling backdrop with gradient overlays |
-| 🔍 Search | Live results with 320ms debounce, genre filters, recent history |
-| 📋 My List | Persistent watchlist with adaptive grid |
-| 🎭 Detail View | Cast carousel, trailer button, backdrop hero, recommendations |
-| 📺 AVKit Player | Custom controls, PiP, keyboard shortcuts, resume position |
-| 👤 Profiles | Up to 5 profiles with avatars, colors, Kids mode |
-| ⚙️ Settings | Playback, subtitles, audio, notifications, about |
-| 🔔 Status Bar | Mini player in macOS menu bar |
-| ⌨️ Shortcuts | Space, ←/→/↑/↓, ⌘F, ⌘⇧P |
-| 🌙 Dark Mode | Full dark-mode design throughout |
-| 🖥️ Universal | Runs on Apple Silicon (M1/M2/M3/M4) and Intel Macs |
+| 🪟 Full-bleed UI | Edge-to-edge video canvas starting directly underneath the macOS title bar |
+| 🛡️ DRM & Video Playback | Natively handles FairPlay/Widevine HTML5 video playback without plugins |
+| 👤 Persistent Sessions | Automatically retains your Netflix cookies and login state across launches |
+| 🫵 Swipe Navigation | Supports Safari-style swipe left/right trackpad gestures to go back/forward |
+| 🚥 Window Controls Alignment | Custom CSS shifts Netflix's navigation menu to prevent overlap with the macOS Close/Minimize/Maximize traffic lights |
+| 🎨 Liquid Glass App Icon | Custom macOS-style glassmorphism app icon for your Dock |
+| 📜 Elegant Scrollbars | Custom ultra-thin scrollbar tracks matching macOS system styles |
 
 ---
 
-## 🚀 Setup
+## 🚀 Setup & Run
 
 ### Prerequisites
 - **macOS 13 (Ventura)** or later
 - **Xcode 15** or later
-- A **free TMDB API key** (see below)
 
-### Step 1 — Get a TMDB API Key (free)
-1. Sign up at [themoviedb.org](https://www.themoviedb.org/signup)
-2. Go to **Settings → API** and request a Developer API key
-3. Copy your **API Key (v3 auth)**
-
-### Step 2 — Add Your Key to the App
-Open [`NetflixMac/Core/Config/APIConfig.swift`](NetflixMac/Core/Config/APIConfig.swift) and replace:
-
-```swift
-static let apiKey = "YOUR_TMDB_API_KEY_HERE"
-```
-
-with your actual key:
-
-```swift
-static let apiKey = "abc123yourkeyhere"
-```
-
-### Step 3 — Open in Xcode
+### Step 1 — Clone and Open in Xcode
+Double-click `NetflixMac.xcodeproj` to open it in Xcode, or run:
 ```bash
 open NetflixMac.xcodeproj
 ```
 
-### Step 4 — Build & Run
-- Select the **NetflixMac** scheme
-- Choose **My Mac** as the destination
-- Press **⌘R** to build and run
+### Step 2 — Configure Signing
+1. Click the blue **`NetflixMac`** project at the top of the left sidebar.
+2. Select the **`NetflixMac`** target under TARGETS.
+3. Click the **`Signing & Capabilities`** tab.
+4. Set **Team** to your personal Apple ID team (to generate local signing certificates).
+   * *Note:* If you get keychain access errors, you can uncheck "Automatically manage signing" and set the **Signing Certificate** dropdown to **`Sign to Run Locally`** to bypass the keychain.
 
-> **Note:** If Xcode shows signing errors, go to **Signing & Capabilities** and set your Team to your personal Apple ID.
+### Step 3 — Build & Run
+* Press **⌘R** (or click the ▶ Play button in Xcode).
+* The real Netflix login page will load immediately. Log in to your actual account to start streaming in 4K/HDR!
 
 ---
 
 ## 📁 Project Structure
 
+The project has been refactored into a highly optimized, lightweight architecture containing just **6 Swift files**:
+
 ```
 NetflixMac/
 ├── App/
-│   ├── NetflixMacApp.swift        ← @main entry + keyboard commands
-│   ├── AppDelegate.swift          ← Status bar, appearance, Touch Bar
-│   └── MainAppView.swift          ← NavigationSplitView + Sidebar
+│   ├── NetflixMacApp.swift        ← @main app entry point
+│   └── AppDelegate.swift          ← Force dark-mode appearance & lifecycle
 ├── Core/
-│   ├── Config/APIConfig.swift     ← 🔑 PUT YOUR API KEY HERE
-│   ├── Network/
-│   │   ├── NetworkService.swift   ← async/await URLSession + caching
-│   │   └── APIEndpoints.swift     ← All TMDB endpoint definitions
-│   ├── Models/                    ← MediaItem, Cast, Genre, VideoResult
-│   └── Extensions/                ← Color+Netflix, View+LiquidGlass
+│   └── Extensions/
+│       ├── Color+Netflix.swift    ← Custom brand colors
+│       └── View+LiquidGlass.swift ← General glassmorphism styling
 ├── Features/
-│   ├── Auth/                      ← Onboarding, Profile selection, AuthVM
-│   ├── Home/                      ← Hero banner, content rows, HomeVM
-│   ├── Search/                    ← Live search, SearchVM
-│   ├── Detail/                    ← DetailView, CastScroll, DetailVM
-│   ├── Player/                    ← AVKit player, MiniPlayer
-│   ├── MyList/                    ← Watchlist grid
-│   ├── Downloads/                 ← Downloads manager UI
-│   └── Settings/                  ← All settings + about
-├── Shared/
-│   ├── Components/                ← LiquidGlassCard, AsyncPosterImage, etc.
-│   └── Managers/                  ← WatchlistManager, PlaybackManager
-└── Resources/
-    ├── Assets.xcassets            ← App icon, images
-    ├── Info.plist                 ← Bundle config, entitlements
-    └── NetflixMac.entitlements    ← Sandbox + network permissions
+│   └── Home/
+│       └── Views/
+│           └── NetflixWebViewContainer.swift  ← Full-bleed web container layout
+└── Shared/
+    └── Components/
+        └── NetflixWebView.swift   ← WKWebView wrapper, CSS injections, User-Agent setup
 ```
 
 ---
 
-## ⌨️ Keyboard Shortcuts
+## 🛠️ Built With
 
-| Shortcut | Action |
-|---|---|
-| `Space` | Play / Pause |
-| `⌘→` | Seek forward 10s |
-| `⌘←` | Seek back 10s |
-| `⌘↑` | Volume up |
-| `⌘↓` | Volume down |
-| `⌘F` | Toggle fullscreen |
-| `⌘⇧P` | Picture in Picture |
-| `⌘,` | Open Settings |
-
----
-
-## 🎨 Liquid Glass Design
-
-The app uses Apple's **Liquid Glass** design language throughout:
-
-- **`.ultraThinMaterial`** on the sidebar, toolbar, and overlays
-- **Specular highlights** — a white gradient strip at the top of glass surfaces
-- **Soft border strokes** — `strokeBorder` with gradient from `white.opacity(0.35)` → `white.opacity(0.08)`
-- **Depth shadows** — `radius: 20–30` with `y: 8–15` offset
-- **Hover lift** — Spring-animated `scaleEffect` + enhanced shadow on hover
-- **Glow effects** — Double `shadow` trick for ambient glow on rating badges
-
----
-
-## 🔌 API
-
-Content is powered by **The Movie Database (TMDB)**. All endpoints used:
-
-- `/trending/all/day` — Trending content
-- `/movie/popular`, `/tv/popular` — Popular movies/shows
-- `/movie/top_rated` — Top rated movies
-- `/movie/now_playing`, `/movie/upcoming` — Cinema listings
-- `/tv/airing_today` — Live TV
-- `/search/multi` — Universal search
-- `/movie/{id}`, `/tv/{id}` — Rich detail
-- `/movie/{id}/credits`, `/tv/{id}/aggregate_credits` — Cast
-- `/movie/{id}/videos`, `/tv/{id}/videos` — Trailers
-- `/movie/{id}/recommendations` — Similar content
-- `/genre/movie/list` — Genre list
-
----
-
-## 📝 Notes
-
-- **Video streaming**: Real Netflix DRM content is not accessible. The player opens YouTube trailers via TMDB's video endpoint. For full streaming, you would need to integrate Netflix's proprietary Widevine DRM SDK (not publicly available).
-- **Downloads**: UI is implemented. Full download logic requires `AVAssetDownloadURLSession` and actual streamable HLS content.
-- **Handoff**: Configured in Info.plist — implement `NSUserActivity` on detail pages to enable cross-device handoff.
-
----
-
-## 🏗️ Built With
-
-- **SwiftUI** — Declarative UI
-- **Combine** — Reactive data binding
-- **AVKit / AVFoundation** — Video playback, PiP
-- **URLSession** — Networking with disk cache
-- **UserDefaults** — Watchlist + position persistence
-- **TMDB API** — Content data
-
----
-
-*Made with ❤️ for personal use. All content metadata © TMDB contributors.*
+- **SwiftUI** — Native declarative UI
+- **WebKit (WKWebView)** — High-performance HTML5 rendering engine
+- **FairPlay DRM** — Native Apple hardware-decryption framework for secure streaming
+- **macOS App Sandbox** — Sandboxed environment with outgoing network client access
