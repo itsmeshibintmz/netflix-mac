@@ -1,75 +1,48 @@
-# Netflix for macOS 🎬
+# <img src="images/app_icon.png" width="60" align="center" valign="middle"> Netflix for macOS
 
-A beautiful, native macOS desktop app wrapper for **Netflix** built using **SwiftUI + WebKit (WKWebView)**, designed to provide a clean, edge-to-edge desktop streaming experience outside of a standard browser.
+A beautiful, native macOS desktop app wrapper for **Netflix**. Built with **SwiftUI + WebKit**, it runs Netflix full-bleed (edge-to-edge) as a standalone desktop app outside of your web browser.
+
+---
+
+## 📸 Screenshots
+
+### The App Interface
+The interface runs completely edge-to-edge, with Netflix's top menu shifted to make room for the macOS window controls.
+![Netflix macOS Interface](images/app_screenshot.png)
 
 ---
 
 ## ✨ Features
 
-| Feature | Details |
-|---|---|
-| 🪟 Full-bleed UI | Edge-to-edge video canvas starting directly underneath the macOS title bar |
-| 🛡️ DRM & Video Playback | Natively handles FairPlay/Widevine HTML5 video playback without plugins |
-| 👤 Persistent Sessions | Automatically retains your Netflix cookies and login state across launches |
-| 🫵 Swipe Navigation | Supports Safari-style swipe left/right trackpad gestures to go back/forward |
-| 🚥 Window Controls Alignment | Custom CSS shifts Netflix's navigation menu to prevent overlap with the macOS Close/Minimize/Maximize traffic lights |
-| 🎨 Liquid Glass App Icon | Custom macOS-style glassmorphism app icon for your Dock |
-| 📜 Elegant Scrollbars | Custom ultra-thin scrollbar tracks matching macOS system styles |
+*   **📺 Full-bleed Video Canvas:** The video player runs edge-to-edge, sitting directly under the macOS translucent title bar.
+*   **🚥 Smart Window Layout:** Netflix's web header is dynamically shifted by `80px` to the right, keeping it clear of the native macOS Close, Minimize, and Maximize traffic lights.
+*   **🫵 Trackpad Gestures:** Support for native trackpad swipes (left/right) to navigate back and forward, just like in Safari.
+*   **👤 Saved Login Sessions:** Keeps you logged in between launches by securely persisting your session cookies.
+*   **📜 Custom Thin Scrollbars:** Replaces chunky web scrollbars with ultra-thin, sleek translucent tracks that match macOS system styles.
+*   **💎 Liquid Glass Icon:** Custom high-res glassmorphism app icon designed to look native on your Dock.
 
 ---
 
-## 🚀 Setup & Run
+## 🚀 How to Run (Simple Steps)
 
-### Prerequisites
-- **macOS 13 (Ventura)** or later
-- **Xcode 15** or later
+### 1. Open the project
+Double-click `NetflixMac.xcodeproj` to open it in Xcode.
 
-### Step 1 — Clone and Open in Xcode
-Double-click `NetflixMac.xcodeproj` to open it in Xcode, or run:
-```bash
-open NetflixMac.xcodeproj
-```
-
-### Step 2 — Configure Signing
+### 2. Set up signing
 1. Click the blue **`Netflix`** project at the top of the left sidebar.
-2. Select the **`Netflix`** target under TARGETS.
-3. Click the **`Signing & Capabilities`** tab.
-4. Set **Team** to your personal Apple ID team (to generate local signing certificates).
-   * *Note:* If you get keychain access errors, you can uncheck "Automatically manage signing" and set the **Signing Certificate** dropdown to **`Sign to Run Locally`** to bypass the keychain.
+2. Select the **`Netflix`** target.
+3. Click the **`Signing & Capabilities`** tab at the top.
+4. Set the **Team** dropdown to your Apple ID.
+   * *Note:* If Xcode asks for a keychain password you don't know, uncheck "Automatically manage signing" and change the **Signing Certificate** dropdown to **`Sign to Run Locally`** to bypass it.
 
-### Step 3 — Build & Run
-* Press **⌘R** (or click the ▶ Play button in Xcode).
-* The real Netflix login page will load immediately. Log in to your actual account to start streaming in 4K/HDR!
-
----
-
-## 📁 Project Structure
-
-The project has been refactored into a highly optimized, lightweight architecture containing just **6 Swift files**:
-
-```
-NetflixMac/
-├── App/
-│   ├── NetflixMacApp.swift        ← @main app entry point
-│   └── AppDelegate.swift          ← Force dark-mode appearance & lifecycle
-├── Core/
-│   └── Extensions/
-│       ├── Color+Netflix.swift    ← Custom brand colors
-│       └── View+LiquidGlass.swift ← General glassmorphism styling
-├── Features/
-│   └── Home/
-│       └── Views/
-│           └── NetflixWebViewContainer.swift  ← Full-bleed web container layout
-└── Shared/
-    └── Components/
-        └── NetflixWebView.swift   ← WKWebView wrapper, CSS injections, User-Agent setup
-```
+### 3. Build & Run
+* Press **⌘R** (or click the Play button in Xcode).
+* Log in with your real Netflix credentials and start watching!
 
 ---
 
 ## 🛠️ Built With
 
-- **SwiftUI** — Native declarative UI
-- **WebKit (WKWebView)** — High-performance HTML5 rendering engine
-- **FairPlay DRM** — Native Apple hardware-decryption framework for secure streaming
-- **macOS App Sandbox** — Sandboxed environment with outgoing network client access
+- **SwiftUI** — Modern declarative UI framework.
+- **WebKit (WKWebView)** — High-performance HTML5 rendering engine.
+- **FairPlay DRM** — Native Apple hardware-decryption for secure streaming.
