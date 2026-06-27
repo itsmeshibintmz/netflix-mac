@@ -1,6 +1,6 @@
 # Netflix for macOS 🎬
 
-A beautiful, native macOS Netflix desktop app wrapper built using **SwiftUI + WebKit (WKWebView)**, designed to provide a clean, edge-to-edge desktop streaming experience outside of a standard browser.
+A beautiful, native macOS desktop app wrapper for **Netflix** built using **SwiftUI + WebKit (WKWebView)**, designed to provide a clean, edge-to-edge desktop streaming experience outside of a standard browser.
 
 ---
 
@@ -31,8 +31,8 @@ open NetflixMac.xcodeproj
 ```
 
 ### Step 2 — Configure Signing
-1. Click the blue **`NetflixMac`** project at the top of the left sidebar.
-2. Select the **`NetflixMac`** target under TARGETS.
+1. Click the blue **`Netflix`** project at the top of the left sidebar.
+2. Select the **`Netflix`** target under TARGETS.
 3. Click the **`Signing & Capabilities`** tab.
 4. Set **Team** to your personal Apple ID team (to generate local signing certificates).
    * *Note:* If you get keychain access errors, you can uncheck "Automatically manage signing" and set the **Signing Certificate** dropdown to **`Sign to Run Locally`** to bypass the keychain.

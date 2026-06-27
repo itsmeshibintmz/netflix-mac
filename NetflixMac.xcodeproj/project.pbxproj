@@ -25,7 +25,7 @@
 		AF01000000000029 /* NetflixWebViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetflixWebViewContainer.swift; sourceTree = "<group>"; };
 		AF01000000000025 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AF01000000000026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CC000000000000001 /* NetflixMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetflixMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC000000000000001 /* Netflix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Netflix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -44,7 +44,7 @@
 		FF000000000000002 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CC000000000000001 /* NetflixMac.app */,
+				CC000000000000001 /* Netflix.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -127,9 +127,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DD000000000000001 /* NetflixMac */ = {
+		DD000000000000001 /* Netflix */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EE000000000000003 /* Build configuration list for PBXNativeTarget "NetflixMac" */;
+			buildConfigurationList = EE000000000000003 /* Build configuration list for PBXNativeTarget "Netflix" */;
 			buildPhases = (
 				CC000000000000002 /* Sources */,
 				CC000000000000003 /* Resources */,
@@ -139,9 +139,9 @@
 			);
 			dependencies = (
 			);
-			name = NetflixMac;
-			productName = NetflixMac;
-			productReference = CC000000000000001 /* NetflixMac.app */;
+			name = Netflix;
+			productName = Netflix;
+			productReference = CC000000000000001 /* Netflix.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -159,7 +159,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EE000000000000002 /* Build configuration list for PBXProject "NetflixMac" */;
+			buildConfigurationList = EE000000000000002 /* Build configuration list for PBXProject "Netflix" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -172,7 +172,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DD000000000000001 /* NetflixMac */,
+				DD000000000000001 /* Netflix */,
 			);
 		};
 /* End PBXProject section */
@@ -320,7 +320,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = NetflixMac/NetflixMac.entitlements;
+				CODE_SIGN_ENTITLEMENTS = NetflixMac/Netflix.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -334,7 +334,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.personal.NetflixMac;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -347,7 +347,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = NetflixMac/NetflixMac.entitlements;
+				CODE_SIGN_ENTITLEMENTS = NetflixMac/Netflix.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -361,7 +361,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.personal.NetflixMac;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -373,7 +373,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EE000000000000002 /* Build configuration list for PBXProject "NetflixMac" */ = {
+		EE000000000000002 /* Build configuration list for PBXProject "Netflix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DD000000000000002 /* Debug */,
@@ -382,7 +382,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EE000000000000003 /* Build configuration list for PBXNativeTarget "NetflixMac" */ = {
+		EE000000000000003 /* Build configuration list for PBXNativeTarget "Netflix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DD000000000000004 /* Debug */,
