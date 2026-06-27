@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.personal.NetflixMac</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>NetflixMac</string>
+	<key>CFBundleDisplayName</key>
+	<string>Netflix</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Personal use only. Not affiliated with Netflix.</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+
+	<!-- Network Access -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+
+	<!-- Microphone (for future voice search) -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Voice search requires microphone access.</string>
+
+	<!-- Notifications -->
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Receive alerts for new episodes and releases.</string>
+
+	<!-- Handoff -->
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.personal.NetflixMac.watch</string>
+	</array>
+
+	<!-- Touch Bar -->
+	<key>NSTouchBarEnabled</key>
+	<true/>
+
+	<!-- Hide from Dock (optional — comment out to show in Dock) -->
+	<!-- <key>LSUIElement</key> <false/> -->
+
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.entertainment</string>
+</dict>
+</plist>
