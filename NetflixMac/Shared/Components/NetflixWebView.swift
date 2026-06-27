@@ -1,5 +1,5 @@
 // MARK: - NetflixWebView.swift
-// Native WKWebView wrapper for macOS featuring Safari User-Agent spoofing for DRM support.
+// Native WKWebView wrapper for macOS featuring Safari User-Agent spoofing, DRM, and CSS injections.
 
 import SwiftUI
 import WebKit
@@ -10,7 +10,6 @@ struct NetflixWebView: NSViewRepresentable {
     @Binding var canGoForward: Bool
     @Binding var isLoading: Bool
 
-    // Action coordinator to trigger commands from SwiftUI
     class CommandCoordinator {
         var goBackAction: (() -> Void)?
         var goForwardAction: (() -> Void)?
@@ -27,14 +26,50 @@ struct NetflixWebView: NSViewRepresentable {
         let configuration = WKWebViewConfiguration()
         configuration.applicationNameForUserAgent = "Version/17.4 Safari/605.1.15"
 
-        // Allow picture-in-picture and video fullscreen
+        // Inject custom CSS to align elements and add modern styling
+        let cssSource = """
+        var style = document.createElement('style');
+        style.innerHTML = `
+            /* Shift only the logo to make room for window controls, others slide over naturally */
+            .logo, 
+            .brand-logo, 
+            #netflix-brand-logo, 
+            svg.logo {
+                margin-left: 80px !important;
+            }
+
+            /* Custom elegant, ultra-thin scrollbars */
+            ::-webkit-scrollbar {
+                width: 6px !important;
+                height: 6px !important;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent !important;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.2) !important;
+                border-radius: 3px !important;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.4) !important;
+            }
+        `;
+        document.head.appendChild(style);
+        """
+        let userScript = WKUserScript(source: cssSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(userScript)
+
+        // Enable media playback and developer settings
         configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
+        
+        // Support Safari swipe gestures to go back/forward
+        webView.allowsBackForwardNavigationGestures = true
 
-        // Spoof modern Safari user agent to ensure FairPlay/Widevine DRM works out of the box
+        // Spoof modern Safari user agent to ensure FairPlay/Widevine DRM works natively
         webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15"
 
         // Wire up control bar actions
@@ -59,9 +94,7 @@ struct NetflixWebView: NSViewRepresentable {
         return webView
     }
 
-    func updateNSView(_ nsView: WKWebView, context: Context) {
-        // No-op - navigation handled via CommandCoordinator
-    }
+    func updateNSView(_ nsView: WKWebView, context: Context) {}
 
     // MARK: - WKWebView Coordinator
     class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
@@ -71,7 +104,6 @@ struct NetflixWebView: NSViewRepresentable {
             self.parent = parent
         }
 
-        // Navigation state changes
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
             DispatchQueue.main.async {
                 self.parent.isLoading = true
