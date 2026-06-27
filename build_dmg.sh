@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 
 echo "🏗️ Building Netflix for macOS (Release build)..."
 # Build a clean Release binary into a local build folder
-xcodebuild -scheme Netflix -configuration Release -derivedDataPath ./build -destination 'platform=macOS' build > /dev/null
+xcodebuild -scheme Netflix -configuration Release -derivedDataPath ./build -destination 'platform=macOS' clean build > /dev/null
 
 echo "📦 Packaging custom branded DMG..."
 # Cleanup old DMG
