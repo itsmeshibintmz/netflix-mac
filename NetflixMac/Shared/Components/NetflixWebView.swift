@@ -24,7 +24,7 @@ struct NetflixWebView: NSViewRepresentable {
 
     func makeNSView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
-        configuration.applicationNameForUserAgent = "Version/17.4 Safari/605.1.15"
+        configuration.websiteDataStore = WKWebsiteDataStore.default()
 
         // Inject custom CSS to align elements and add modern styling
         let cssSource = """
@@ -69,8 +69,8 @@ struct NetflixWebView: NSViewRepresentable {
         // Support Safari swipe gestures to go back/forward
         webView.allowsBackForwardNavigationGestures = true
 
-        // Spoof modern Safari user agent to ensure FairPlay/Widevine DRM works natively
-        webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15"
+        // Spoof modern Safari user agent to ensure FairPlay/Widevine DRM works natively (optional, fallback to native if commented out)
+        // webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15"
 
         // Wire up control bar actions
         commandCoordinator.goBackAction = { [weak webView] in
