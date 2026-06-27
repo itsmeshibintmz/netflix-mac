@@ -38,4 +38,5 @@ The interface runs completely edge-to-edge, with a clean visual overlay that han
 ## 📋 Requirements
 
 *   Supports macOS 13 (Ventura), macOS 14 (Sonoma), and newer.
-*   Compatible with both Intel and Apple Silicon (M1/M2/M3) Macs.
+*   Compatible with both Intel and Apple Silicon (M-series) Macs.
+
