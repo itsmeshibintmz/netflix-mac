@@ -18,6 +18,13 @@ struct NetflixMacApp: App {
         .commands {
             // Remove New Window command
             CommandGroup(replacing: .newItem) {}
+            
+            // Add Check for Updates option under application info menu
+            CommandGroup(after: .appInfo) {
+                Button("Check for Updates...") {
+                    UpdateManager.shared.checkForUpdates(manual: true)
+                }
+            }
         }
 
         // Native Preferences Window (accessed via ⌘,)

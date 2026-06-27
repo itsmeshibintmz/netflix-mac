@@ -15,6 +15,8 @@
 		AA01000000000029 /* NetflixWebViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000029 /* NetflixWebViewContainer.swift */; };
 		AA01000000000030 /* LiquidGlassPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000030 /* LiquidGlassPill.swift */; };
 		AA0100000000001E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0100000000001E /* SettingsView.swift */; };
+		AA010000000000A1 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A1 /* UpdateManager.swift */; };
+		AA010000000000A2 /* UpdateSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A2 /* UpdateSheetView.swift */; };
 		AA01000000000025 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF01000000000025 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +29,8 @@
 		AF01000000000029 /* NetflixWebViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetflixWebViewContainer.swift; sourceTree = "<group>"; };
 		AF01000000000030 /* LiquidGlassPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassPill.swift; sourceTree = "<group>"; };
 		AF0100000000001E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AF010000000000A1 /* UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
+		AF010000000000A2 /* UpdateSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSheetView.swift; sourceTree = "<group>"; };
 		AF01000000000025 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AF01000000000026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC000000000000001 /* Netflix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Netflix.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +69,7 @@
 		FF000000000000004 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				AF010000000000A1 /* UpdateManager.swift */,
 				FF000000000000008 /* Extensions */,
 			);
 			path = Core;
@@ -101,6 +106,7 @@
 			children = (
 				AF01000000000029 /* NetflixWebViewContainer.swift */,
 				AF01000000000030 /* LiquidGlassPill.swift */,
+				AF010000000000A2 /* UpdateSheetView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -223,6 +229,8 @@
 				AA01000000000029 /* NetflixWebViewContainer.swift in Sources */,
 				AA01000000000030 /* LiquidGlassPill.swift in Sources */,
 				AA0100000000001E /* SettingsView.swift in Sources */,
+				AA010000000000A1 /* UpdateManager.swift in Sources */,
+				AA010000000000A2 /* UpdateSheetView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

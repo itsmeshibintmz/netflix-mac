@@ -19,6 +19,9 @@ struct NetflixWebViewContainer: View {
     @State private var isHoveringPill = false
     @State private var hideTimer: Timer? = nil
 
+    // Automatic update coordinator
+    @ObservedObject private var updateManager = UpdateManager.shared
+
     var body: some View {
         ZStack(alignment: .bottom) {
             Color.netflixBlack.ignoresSafeArea()
@@ -76,6 +79,46 @@ struct NetflixWebViewContainer: View {
                 hideTimer?.invalidate()
             }
         }
+        .onAppear {
+            updateManager.checkForUpdates()
+        }
+        // Auto-Update Sheet
+        .sheet(isPresented: $updateManager.isUpdateAvailable) {
+            UpdateSheetView(
+                title: "Update Available",
+                version: updateManager.latestVersion,
+                notes: updateManager.changelog,
+                primaryButtonText: "Download & Install",
+                isDownloading: updateManager.isDownloading,
+                downloadProgress: updateManager.downloadProgress,
+                primaryAction: {
+                    updateManager.downloadAndInstall()
+                },
+                cancelAction: {
+                    updateManager.isUpdateAvailable = false
+                }
+            )
+        }
+        // Post-Update "What's New" Sheet
+        .sheet(isPresented: $updateManager.showWhatsNew) {
+            UpdateSheetView(
+                title: "What's New",
+                version: updateManager.currentVersion,
+                notes: updateManager.whatsNewChangelog,
+                primaryButtonText: "Got It",
+                isDownloading: false,
+                downloadProgress: 0.0,
+                primaryAction: {
+                    updateManager.showWhatsNew = false
+                }
+            )
+        }
+        // Up-To-Date Dialog (triggers when manual update check is up-to-date)
+        .alert("You're up to date!", isPresented: $updateManager.isUpToDate) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Netflix v\(updateManager.currentVersion) is the latest version available.")
+        }
     }
 
     // Reset the auto-hide timer after 2.5 seconds of mouse stillness
@@ -110,3 +153,4 @@ class DragNSView: NSView {
         }
     }
 }
+
