@@ -191,8 +191,10 @@ struct NetflixWebView: NSViewRepresentable {
         webView.uiDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
 
-        // Spoof desktop Safari User-Agent to force full desktop features (such as scroll-based row lazy loading)
-        webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
+        // Resolve user agent dynamically based on saved quality settings
+        let savedQuality = UserDefaults.standard.string(forKey: "streamingQuality") ?? "Auto"
+        let resolvedQuality = QualityLevel(rawValue: savedQuality) ?? .auto
+        webView.customUserAgent = resolvedQuality.userAgent
 
 
         // Wire up control bar actions
@@ -230,6 +232,16 @@ struct NetflixWebView: NSViewRepresentable {
         }
         """
         nsView.evaluateJavaScript(js, completionHandler: nil)
+
+        // Read selected quality and update User-Agent dynamically
+        let savedQuality = UserDefaults.standard.string(forKey: "streamingQuality") ?? "Auto"
+        let resolvedQuality = QualityLevel(rawValue: savedQuality) ?? .auto
+        let expectedUA = resolvedQuality.userAgent
+        
+        if nsView.customUserAgent != expectedUA {
+            nsView.customUserAgent = expectedUA
+            nsView.reload()
+        }
     }
 
     // MARK: - WKWebView Coordinator
