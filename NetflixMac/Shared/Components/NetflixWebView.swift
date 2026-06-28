@@ -130,6 +130,11 @@ struct NetflixWebView: NSViewRepresentable {
 
             // Binge monitoring loop (runs every 1 second)
             setInterval(() => {
+                // Only perform auto-actions when actively in the video player
+                if (!window.location.pathname.includes('/watch')) {
+                    return;
+                }
+
                 let settings = window.macFlixSettings || {};
 
                 // 1. Auto-Skip Intro & Recaps
