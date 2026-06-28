@@ -178,13 +178,71 @@ struct NetflixWebView: NSViewRepresentable {
                     video = null;
                 }
             }, 1000);
+
+            // 4. HTML5 Fullscreen Event Bridge
+            document.addEventListener('webkitfullscreenchange', function() {
+                if (document.webkitIsFullScreen) {
+                    window.webkit.messageHandlers.netflixMac.postMessage({ action: "enterFullscreen" });
+                } else {
+                    window.webkit.messageHandlers.netflixMac.postMessage({ action: "exitFullscreen" });
+                }
+            });
+            document.addEventListener('fullscreenchange', function() {
+                if (document.fullscreenElement) {
+                    window.webkit.messageHandlers.netflixMac.postMessage({ action: "enterFullscreen" });
+                } else {
+                    window.webkit.messageHandlers.netflixMac.postMessage({ action: "exitFullscreen" });
+                }
+            });
+
+            // 5. Toggle Fullscreen Helper
+            window.toggleNetflixFullscreen = function() {
+                let fsBtn = document.querySelector('button.button-nfplayerFullscreen, button[data-uia="control-fullscreen-enter"], button[data-uia="control-fullscreen-exit"]');
+                if (fsBtn) {
+                    fsBtn.click();
+                } else {
+                    let video = document.querySelector('video');
+                    if (video) {
+                        if (document.webkitIsFullScreen || document.fullscreenElement) {
+                            if (document.webkitExitFullscreen) {
+                                document.webkitExitFullscreen();
+                            } else if (document.exitFullscreen) {
+                                document.exitFullscreen();
+                            }
+                        } else {
+                            if (video.webkitRequestFullScreen) {
+                                video.webkitRequestFullScreen();
+                            } else if (video.requestFullscreen) {
+                                video.requestFullscreen();
+                            }
+                        }
+                    }
+                }
+            };
+
+            // 6. Keyboard Shortcut for 'F' Key
+            document.addEventListener('keydown', function(e) {
+                let active = document.activeElement;
+                if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) {
+                    return;
+                }
+                if (e.key.toLowerCase() === 'f') {
+                    window.toggleNetflixFullscreen();
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }, true);
         })();
         """
         let jsScript = WKUserScript(source: jsSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         configuration.userContentController.addUserScript(jsScript)
 
+        // Register script message handler
+        configuration.userContentController.add(context.coordinator, name: "netflixMac")
+
         // Enable media playback preferences
         configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
+        configuration.preferences.setValue(true, forKey: "fullScreenEnabled")
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
@@ -244,12 +302,39 @@ struct NetflixWebView: NSViewRepresentable {
         }
     }
 
+    static func dismantleNSView(_ nsView: WKWebView, coordinator: WebViewCoordinator) {
+        nsView.configuration.userContentController.removeScriptMessageHandler(forName: "netflixMac")
+    }
+
     // MARK: - WKWebView Coordinator
-    class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
+    class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
         var parent: NetflixWebView
 
         init(_ parent: NetflixWebView) {
             self.parent = parent
+        }
+
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            guard message.name == "netflixMac" else { return }
+            guard let body = message.body as? [String: Any],
+                  let action = body["action"] as? String else { return }
+            
+            DispatchQueue.main.async {
+                guard let webView = message.webView,
+                      let window = webView.window else { return }
+                
+                let isFullscreen = window.styleMask.contains(.fullScreen)
+                
+                if action == "enterFullscreen" {
+                    if !isFullscreen {
+                        window.toggleFullScreen(nil)
+                    }
+                } else if action == "exitFullscreen" {
+                    if isFullscreen {
+                        window.toggleFullScreen(nil)
+                    }
+                }
+            }
         }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
