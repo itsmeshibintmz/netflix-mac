@@ -16,28 +16,54 @@ struct UpdateSheetView: View {
     let primaryAction: () -> Void
     var cancelAction: (() -> Void)? = nil
 
-    private var cleanNotes: String {
-        let lines = notes.components(separatedBy: .newlines)
-        var filteredLines = [String]()
-        var skipNextSeparator = false
+    private struct ChangelogLine: Identifiable {
+        let id = UUID()
+        let text: String
+        let type: LineType
         
-        for line in lines {
+        enum LineType {
+            case title
+            case header
+            case bullet
+            case paragraph
+        }
+    }
+
+    private var changelogLines: [ChangelogLine] {
+        let normalized = notes.replacingOccurrences(of: "\r\n", with: "\n")
+        let rawLines = normalized.components(separatedBy: .newlines)
+        var result = [ChangelogLine]()
+        
+        for line in rawLines {
             let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
-            // Strip out version header lines (e.g. "# v1.3.1")
-            if trimmed.hasPrefix("#") && (trimmed.contains(version) || trimmed.lowercased().contains("version") || trimmed.lowercased().contains("latest")) {
-                skipNextSeparator = true
-                continue
+            if trimmed.isEmpty { continue }
+            if trimmed == "---" || trimmed == "***" { continue }
+            
+            if trimmed.hasPrefix("# ") {
+                let text = trimmed.dropFirst(2).trimmingCharacters(in: .whitespaces)
+                // Filter out version/latest title duplicate
+                if text.contains(version) || text.lowercased().contains("version") || text.lowercased().contains("latest") {
+                    continue
+                }
+                result.append(ChangelogLine(text: text, type: .title))
+            } else if trimmed.hasPrefix("## ") {
+                let text = trimmed.dropFirst(3).trimmingCharacters(in: .whitespaces)
+                result.append(ChangelogLine(text: text, type: .header))
+            } else if trimmed.hasPrefix("### ") {
+                let text = trimmed.dropFirst(4).trimmingCharacters(in: .whitespaces)
+                result.append(ChangelogLine(text: text, type: .header))
+            } else if trimmed.hasPrefix("- ") {
+                let text = trimmed.dropFirst(2).trimmingCharacters(in: .whitespaces)
+                result.append(ChangelogLine(text: text, type: .bullet))
+            } else if trimmed.hasPrefix("* ") {
+                let text = trimmed.dropFirst(2).trimmingCharacters(in: .whitespaces)
+                result.append(ChangelogLine(text: text, type: .bullet))
+            } else {
+                result.append(ChangelogLine(text: trimmed, type: .paragraph))
             }
-            // Strip out horizontal line below the heading
-            if skipNextSeparator && (trimmed == "---" || trimmed == "***") {
-                skipNextSeparator = false
-                continue
-            }
-            skipNextSeparator = false
-            filteredLines.append(line)
         }
         
-        return filteredLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+        return result
     }
 
     var body: some View {
@@ -61,18 +87,39 @@ struct UpdateSheetView: View {
 
             // Scrollable Changelog Box
             ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("What's Changed:")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(.white)
-                        .padding(.bottom, 2)
-                    
-                    // SwiftUI Text natively renders markdown tags
-                    Text(LocalizedStringKey(cleanNotes))
-                        .font(.system(size: 12))
-                        .foregroundStyle(Color.white.opacity(0.8))
-                        .multilineTextAlignment(.leading)
-                        .lineSpacing(4)
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(changelogLines) { line in
+                        switch line.type {
+                        case .title:
+                            Text(line.text)
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundStyle(.white)
+                                .padding(.top, 6)
+                        case .header:
+                            Text(line.text)
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundStyle(Color.netflixRed)
+                                .padding(.top, 4)
+                        case .bullet:
+                            HStack(alignment: .top, spacing: 6) {
+                                Text("•")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundStyle(Color.netflixRed)
+                                Text(LocalizedStringKey(line.text))
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(Color.white.opacity(0.85))
+                                    .multilineTextAlignment(.leading)
+                                    .lineSpacing(3)
+                            }
+                            .padding(.leading, 6)
+                        case .paragraph:
+                            Text(LocalizedStringKey(line.text))
+                                .font(.system(size: 12))
+                                .foregroundStyle(Color.white.opacity(0.8))
+                                .multilineTextAlignment(.leading)
+                                .lineSpacing(4)
+                        }
+                    }
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
