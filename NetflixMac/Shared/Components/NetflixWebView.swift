@@ -241,7 +241,9 @@ struct NetflixWebView: NSViewRepresentable {
         configuration.userContentController.add(context.coordinator, name: "netflixMac")
 
         // Enable media playback preferences
+        #if DEBUG
         configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
+        #endif
         configuration.preferences.setValue(true, forKey: "fullScreenEnabled")
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
@@ -312,6 +314,28 @@ struct NetflixWebView: NSViewRepresentable {
 
         init(_ parent: NetflixWebView) {
             self.parent = parent
+        }
+
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            guard let url = navigationAction.request.url else {
+                decisionHandler(.cancel)
+                return
+            }
+            
+            // Only restrict page navigation inside the main frame
+            if navigationAction.targetFrame?.isMainFrame == true {
+                let host = url.host?.lowercased() ?? ""
+                if host.hasSuffix("netflix.com") || url.scheme == "about" {
+                    decisionHandler(.allow)
+                } else {
+                    // Open external links in default macOS browser instead of embedding them
+                    NSWorkspace.shared.open(url)
+                    decisionHandler(.cancel)
+                }
+            } else {
+                // Allow iframe content, scripts, stylesheets, and login CAPTCHAs to load
+                decisionHandler(.allow)
+            }
         }
 
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
