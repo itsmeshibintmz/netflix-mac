@@ -42,6 +42,7 @@ final class UpdateManager: ObservableObject {
         guard let url = URL(string: "https://api.github.com/repos/\(repoPath)/releases/latest") else { return }
 
         var request = URLRequest(url: url)
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData // Force check live API, ignoring system caches
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
         request.setValue("NetflixMacWrapper-Updater", forHTTPHeaderField: "User-Agent")
 
@@ -56,11 +57,18 @@ final class UpdateManager: ObservableObject {
     }
 
     private func handleLatestRelease(_ release: GitHubRelease) {
-        // Normalize version tags (remove 'v' prefix if present)
-        let cleanedTag = release.tagName.trimmingCharacters(in: CharacterSet(charactersIn: "vV"))
+        // Normalize version tags (remove 'v.', 'v', or surrounding dots)
+        var cleanedTag = release.tagName.lowercased()
+        if cleanedTag.hasPrefix("v.") {
+            cleanedTag = String(cleanedTag.dropFirst(2))
+        } else if cleanedTag.hasPrefix("v") {
+            cleanedTag = String(cleanedTag.dropFirst(1))
+        }
+        cleanedTag = cleanedTag.trimmingCharacters(in: CharacterSet(charactersIn: "."))
+        
         let current = currentVersion
 
-        // Compare versions numerically (e.g. "1.1.1" > "1.1.0")
+        // Compare versions numerically (e.g. "1.3.0" > "1.2.0")
         if cleanedTag.compare(current, options: .numeric) == .orderedDescending {
             // Find Netflix.dmg asset
             if let dmgAsset = release.assets.first(where: { $0.name.lowercased().hasSuffix(".dmg") }) {
@@ -87,20 +95,33 @@ final class UpdateManager: ObservableObject {
     }
 
     private func fetchReleaseNotes(for version: String) {
-        guard let url = URL(string: "https://api.github.com/repos/\(repoPath)/releases/tags/v\(version)") else { return }
+        guard let url = URL(string: "https://api.github.com/repos/\(repoPath)/releases") else { return }
 
         var request = URLRequest(url: url)
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
         request.setValue("NetflixMacWrapper-Updater", forHTTPHeaderField: "User-Agent")
 
         URLSession.shared.dataTaskPublisher(for: request)
             .map(\.data)
-            .decode(type: GitHubRelease.self, decoder: JSONDecoder())
+            .decode(type: [GitHubRelease].self, decoder: JSONDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] release in
-                self?.whatsNewChangelog = release.body
-                self?.showWhatsNew = true
-                self?.lastSeenVersion = version // Lock version to prevent showing modal again
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] releases in
+                // Scan the releases list for a matching cleaned tag version
+                if let matchingRelease = releases.first(where: { release in
+                    var tag = release.tagName.lowercased()
+                    if tag.hasPrefix("v.") {
+                        tag = String(tag.dropFirst(2))
+                    } else if tag.hasPrefix("v") {
+                        tag = String(tag.dropFirst(1))
+                    }
+                    tag = tag.trimmingCharacters(in: CharacterSet(charactersIn: "."))
+                    return tag == version
+                }) {
+                    self?.whatsNewChangelog = matchingRelease.body
+                    self?.showWhatsNew = true
+                    self?.lastSeenVersion = version
+                }
             })
             .store(in: &cancellables)
     }

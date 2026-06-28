@@ -44,7 +44,7 @@ struct UpdateSheetView: View {
                         .padding(.bottom, 2)
                     
                     // SwiftUI Text natively renders markdown tags
-                    Text(notes)
+                    Text(LocalizedStringKey(notes))
                         .font(.system(size: 12))
                         .foregroundStyle(Color.white.opacity(0.8))
                         .multilineTextAlignment(.leading)
