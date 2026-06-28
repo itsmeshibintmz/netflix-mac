@@ -243,6 +243,11 @@ struct NetflixWebView: NSViewRepresentable {
         // Enable media playback preferences
         configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
         configuration.preferences.setValue(true, forKey: "fullScreenEnabled")
+        
+        // Optimize video streaming for hardware HEVC/HDR capabilities on macOS
+        configuration.preferences.setValue(true, forKey: "hardwareAccelerationEnabled")
+        configuration.preferences.setValue(true, forKey: "mediaCapabilitiesEnabled")
+        configuration.preferences.setValue(true, forKey: "webGLEnabled")
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator

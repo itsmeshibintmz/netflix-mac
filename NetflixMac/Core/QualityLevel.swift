@@ -44,8 +44,8 @@ enum QualityLevel: String, CaseIterable, Identifiable {
     var userAgent: String {
         switch self {
         case .auto, .high:
-            // Standard macOS Safari - Unlocks native hardware FairPlay DRM (1080p and 4K)
-            return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
+            // Standard macOS Safari 18 - Unlocks native hardware FairPlay DRM (1080p, 4K, HDR)
+            return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15"
         case .medium:
             // macOS Chrome - Restricts playback to standard software Widevine DRM (caps at 720p)
             return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
