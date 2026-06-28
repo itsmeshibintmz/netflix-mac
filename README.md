@@ -7,7 +7,7 @@
 ![Last Commit](https://img.shields.io/github/last-commit/itsmeshibintmz/netflix-mac)
 ![GitHub stars](https://img.shields.io/github/stars/itsmeshibintmz/netflix-mac?style=social)
 
-#🍿 Netflix for macOS
+# 🍿 Netflix for macOS
 
 > The native macOS Netflix app everyone has been waiting for.
 
