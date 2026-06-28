@@ -16,6 +16,30 @@ struct UpdateSheetView: View {
     let primaryAction: () -> Void
     var cancelAction: (() -> Void)? = nil
 
+    private var cleanNotes: String {
+        let lines = notes.components(separatedBy: .newlines)
+        var filteredLines = [String]()
+        var skipNextSeparator = false
+        
+        for line in lines {
+            let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
+            // Strip out version header lines (e.g. "# v1.3.1")
+            if trimmed.hasPrefix("#") && (trimmed.contains(version) || trimmed.lowercased().contains("version") || trimmed.lowercased().contains("latest")) {
+                skipNextSeparator = true
+                continue
+            }
+            // Strip out horizontal line below the heading
+            if skipNextSeparator && (trimmed == "---" || trimmed == "***") {
+                skipNextSeparator = false
+                continue
+            }
+            skipNextSeparator = false
+            filteredLines.append(line)
+        }
+        
+        return filteredLines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     var body: some View {
         VStack(spacing: 20) {
             // Header Group
@@ -44,7 +68,7 @@ struct UpdateSheetView: View {
                         .padding(.bottom, 2)
                     
                     // SwiftUI Text natively renders markdown tags
-                    Text(LocalizedStringKey(notes))
+                    Text(LocalizedStringKey(cleanNotes))
                         .font(.system(size: 12))
                         .foregroundStyle(Color.white.opacity(0.8))
                         .multilineTextAlignment(.leading)

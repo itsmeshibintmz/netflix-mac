@@ -137,6 +137,80 @@ final class UpdateManager: ObservableObject {
         let task = session.downloadTask(with: downloadURL)
         task.resume()
     }
+
+    /// Mounts DMG silently, overwrites running app bundle, cleans up, and relaunches the new version.
+    func installUpdate(dmgPath: String) {
+        let mountPath = "/tmp/netflix_update_mount"
+        let targetAppPath = Bundle.main.bundlePath
+        
+        // 1. Force detach any existing mount first to prevent conflicts
+        let detachTask = Process()
+        detachTask.launchPath = "/usr/bin/hdiutil"
+        detachTask.arguments = ["detach", mountPath, "-force"]
+        detachTask.standardOutput = Pipe()
+        detachTask.standardError = Pipe()
+        detachTask.launch()
+        detachTask.waitUntilExit()
+        
+        // 2. Mount the DMG quietly in the background without launching Finder window
+        let mountTask = Process()
+        mountTask.launchPath = "/usr/bin/hdiutil"
+        mountTask.arguments = ["attach", dmgPath, "-mountpoint", mountPath, "-nobrowse", "-noverify"]
+        mountTask.standardOutput = Pipe()
+        mountTask.standardError = Pipe()
+        mountTask.launch()
+        mountTask.waitUntilExit()
+        
+        let fileManager = FileManager.default
+        let mountedAppPath = "\(mountPath)/Netflix.app"
+        guard fileManager.fileExists(atPath: mountedAppPath) else {
+            print("Error: Netflix.app bundle not found in mounted DMG.")
+            return
+        }
+        
+        // 3. Write background relauncher shell script to /tmp/relauncher.sh
+        let scriptPath = "/tmp/relauncher.sh"
+        let scriptContent = """
+        #!/bin/bash
+        # Wait for the running application to exit
+        sleep 1.2
+        # Overwrite the running app cleanly
+        rm -rf "\(targetAppPath)"
+        cp -R "\(mountedAppPath)" "\(targetAppPath)"
+        # Detach DMG
+        hdiutil detach "\(mountPath)" -force
+        # Clean up DMG installer file
+        rm -f "\(dmgPath)"
+        # Relaunch the new version
+        open "\(targetAppPath)"
+        # Self-destruct
+        rm -- "$0"
+        """
+        
+        do {
+            try scriptContent.write(toFile: scriptPath, atomically: true, encoding: .utf8)
+            
+            // Mark relauncher script as executable
+            let chmodTask = Process()
+            chmodTask.launchPath = "/bin/chmod"
+            chmodTask.arguments = ["+x", scriptPath]
+            chmodTask.launch()
+            chmodTask.waitUntilExit()
+            
+            // Launch relauncher script in the background
+            let runTask = Process()
+            runTask.launchPath = "/bin/bash"
+            runTask.arguments = [scriptPath]
+            runTask.launch()
+            
+            // Gracefully terminate the current app session immediately
+            DispatchQueue.main.async {
+                NSApplication.shared.terminate(nil)
+            }
+        } catch {
+            print("Failed to write relauncher script: \(error)")
+        }
+    }
 }
 
 // MARK: - Download Progress Delegate
@@ -170,8 +244,8 @@ private final class DownloadProgressDelegate: NSObject, URLSessionDownloadDelega
 
             DispatchQueue.main.async {
                 self.manager.isDownloading = false
-                // Mount/open the DMG automatically
-                NSWorkspace.shared.open(destinationURL)
+                // Trigger automated silent install
+                self.manager.installUpdate(dmgPath: destinationURL.path)
             }
         } catch {
             print("Failed to move downloaded update: \(error)")
