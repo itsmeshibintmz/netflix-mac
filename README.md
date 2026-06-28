@@ -6,6 +6,8 @@ A beautiful, fast, and modern macOS client built with SwiftUI and Apple's latest
 
 > ⚠️ Unofficial project. Not affiliated with, endorsed by, or sponsored by Netflix.
 
+<img width="1774" height="887" alt="netflix banner" src="https://github.com/user-attachments/assets/36ef8c75-570b-4cc0-ae19-171a3f34aa89" />
+
 ---
 
 ## ✨ Features
