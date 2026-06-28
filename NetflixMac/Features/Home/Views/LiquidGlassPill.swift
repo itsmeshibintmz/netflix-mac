@@ -67,6 +67,7 @@ struct LiquidGlassPill: View {
                 }
                 .buttonStyle(.plain)
                 .hoverLift(scale: 1.1, shadowRadius: 10)
+                .focusable(false)
                 .onHover { hovering in
                     isSettingsHovered = hovering
                 }
@@ -87,6 +88,7 @@ struct LiquidGlassPill: View {
                 }
                 .buttonStyle(.plain)
                 .hoverLift(scale: 1.1, shadowRadius: 10)
+                .focusable(false)
                 .onHover { hovering in
                     isSettingsHovered = hovering
                 }
@@ -148,6 +150,7 @@ struct PillButton: View {
         }
         .disabled(!isEnabled)
         .buttonStyle(.plain)
+        .focusable(false)
         .hoverLift(scale: 1.1, shadowRadius: 10) // Custom design-system lift/hover effect
         .onHover { hovering in
             if isEnabled {

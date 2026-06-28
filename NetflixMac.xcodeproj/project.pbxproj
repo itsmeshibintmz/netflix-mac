@@ -11,14 +11,14 @@
 		AA01000000000002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000002 /* AppDelegate.swift */; };
 		AA0100000000000B /* Color+Netflix.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0100000000000B /* Color+Netflix.swift */; };
 		AA0100000000000C /* View+LiquidGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0100000000000C /* View+LiquidGlass.swift */; };
+		AA0100000000001E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0100000000001E /* SettingsView.swift */; };
+		AA01000000000025 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF01000000000025 /* Assets.xcassets */; };
 		AA01000000000028 /* NetflixWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000028 /* NetflixWebView.swift */; };
 		AA01000000000029 /* NetflixWebViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000029 /* NetflixWebViewContainer.swift */; };
 		AA01000000000030 /* LiquidGlassPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000030 /* LiquidGlassPill.swift */; };
-		AA0100000000001E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0100000000001E /* SettingsView.swift */; };
 		AA010000000000A1 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A1 /* UpdateManager.swift */; };
 		AA010000000000A2 /* UpdateSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A2 /* UpdateSheetView.swift */; };
 		AA010000000000B1 /* QualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000B1 /* QualityLevel.swift */; };
-		AA01000000000025 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF01000000000025 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,19 +26,37 @@
 		AF01000000000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AF0100000000000B /* Color+Netflix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Netflix.swift"; sourceTree = "<group>"; };
 		AF0100000000000C /* View+LiquidGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+LiquidGlass.swift"; sourceTree = "<group>"; };
+		AF0100000000001E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AF01000000000025 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AF01000000000026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AF01000000000028 /* NetflixWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetflixWebView.swift; sourceTree = "<group>"; };
 		AF01000000000029 /* NetflixWebViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetflixWebViewContainer.swift; sourceTree = "<group>"; };
 		AF01000000000030 /* LiquidGlassPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassPill.swift; sourceTree = "<group>"; };
-		AF0100000000001E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AF010000000000A1 /* UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
 		AF010000000000A2 /* UpdateSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSheetView.swift; sourceTree = "<group>"; };
 		AF010000000000B1 /* QualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityLevel.swift; sourceTree = "<group>"; };
-		AF01000000000025 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		AF01000000000026 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC000000000000001 /* Netflix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Netflix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		CC000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
+		FF000000000000000 = {
+			isa = PBXGroup;
+			children = (
+				FF000000000000001 /* NetflixMac */,
+				FF000000000000002 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
 		FF000000000000001 /* NetflixMac */ = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +132,31 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		FF00000000000001D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				AF01000000000028 /* NetflixWebView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		FF00000000000001E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				FF00000000000001D /* Components */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		FF000000000000021 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AF01000000000025 /* Assets.xcassets */,
+				AF01000000000026 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		FF000000000000022 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -128,31 +171,6 @@
 				AF0100000000001E /* SettingsView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		FF00000000000001E /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				FF00000000000001D /* Components */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		FF00000000000001D /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				AF01000000000028 /* NetflixWebView.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		FF000000000000021 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				AF01000000000025 /* Assets.xcassets */,
-				AF01000000000026 /* Info.plist */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,7 +208,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EE000000000000002 /* Build configuration list for PBXProject "Netflix" */;
+			buildConfigurationList = EE000000000000002 /* Build configuration list for PBXProject "NetflixMac" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -208,16 +226,16 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXGroup root */
-		FF000000000000000 = {
-			isa = PBXGroup;
-			children = (
-				FF000000000000001 /* NetflixMac */,
-				FF000000000000002 /* Products */,
+/* Begin PBXResourcesBuildPhase section */
+		CC000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA01000000000025 /* Assets.xcassets in Resources */,
 			);
-			sourceTree = "<group>";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXGroup root */
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CC000000000000002 /* Sources */ = {
@@ -239,27 +257,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXResourcesBuildPhase section */
-		CC000000000000003 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AA01000000000025 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		CC000000000000004 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
 		DD000000000000002 /* Debug */ = {
@@ -352,7 +349,7 @@
 			};
 			name = Release;
 		};
-		DD000000000000004 /* Debug - Target */ = {
+		DD000000000000004 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -379,7 +376,7 @@
 			};
 			name = Debug;
 		};
-		DD000000000000005 /* Release - Target */ = {
+		DD000000000000005 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -409,7 +406,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EE000000000000002 /* Build configuration list for PBXProject "Netflix" */ = {
+		EE000000000000002 /* Build configuration list for PBXProject "NetflixMac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DD000000000000002 /* Debug */,
@@ -428,7 +425,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
 	};
 	rootObject = EE000000000000001 /* Project object */;
 }

@@ -57,6 +57,7 @@ struct NetflixWebViewContainer: View {
             .padding(.bottom, 24)
             .offset(y: (showPill || isHoveringPill) ? 0 : 80)
             .opacity((showPill || isHoveringPill) ? 1.0 : 0.0)
+            .allowsHitTesting(showPill || isHoveringPill)
             .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showPill || isHoveringPill)
         }
         .preferredColorScheme(.dark)

@@ -170,19 +170,41 @@ final class UpdateManager: ObservableObject {
         
         // 3. Write background relauncher shell script to /tmp/relauncher.sh
         let scriptPath = "/tmp/relauncher.sh"
+        let parentPID = ProcessInfo.processInfo.processIdentifier
         let scriptContent = """
         #!/bin/bash
-        # Wait for the running application to exit
-        sleep 1.2
+        # Ignore SIGHUP to prevent getting killed when parent exits
+        trap '' SIGHUP
+
+        # Redirect stdout and stderr to a log file for diagnostics
+        exec > /tmp/netflix_updater.log 2>&1
+
+        echo "Starting update installation..."
+
+        # Wait for the running application (PID: \(parentPID)) to exit completely
+        echo "Waiting for parent app (PID: \(parentPID)) to exit..."
+        while kill -0 \(parentPID) 2>/dev/null; do
+            sleep 0.1
+        done
+
+        echo "App exited. Overwriting app bundle..."
         # Overwrite the running app cleanly
         rm -rf "\(targetAppPath)"
         cp -R "\(mountedAppPath)" "\(targetAppPath)"
+
+        echo "Detaching DMG volume..."
         # Detach DMG
         hdiutil detach "\(mountPath)" -force
+
+        echo "Cleaning up installer files..."
         # Clean up DMG installer file
         rm -f "\(dmgPath)"
+
+        echo "Relaunching application..."
         # Relaunch the new version
         open "\(targetAppPath)"
+
+        echo "Update completed successfully."
         # Self-destruct
         rm -- "$0"
         """
@@ -231,15 +253,14 @@ private final class DownloadProgressDelegate: NSObject, URLSessionDownloadDelega
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         let fileManager = FileManager.default
-        let downloadsDir = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
-        let destinationURL = downloadsDir.appendingPathComponent("Netflix.dmg")
+        let destinationURL = URL(fileURLWithPath: "/tmp/NetflixUpdate.dmg")
 
         do {
-            // Clean up existing file in Downloads if present
+            // Clean up existing file if present
             if fileManager.fileExists(atPath: destinationURL.path) {
                 try fileManager.removeItem(at: destinationURL)
             }
-            // Move downloaded file to Downloads
+            // Move downloaded file to temporary path
             try fileManager.moveItem(at: location, to: destinationURL)
 
             DispatchQueue.main.async {
