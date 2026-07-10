@@ -46,3 +46,4 @@ Short overview summary of what this release is about.
 | v1.3.7  | Installer Permission Bypass & Playback Interaction Fixes 🛠️ |
 | v1.4.0  | Clean Transparent App Icon, Updater & Playback Fixes 🚀 |
 | v1.4.1  | macOS Sequoia Tinted & Dark Mode Icon Fixes 🎨 |
+| v1.4.2  | macOS Sequoia Tinted & Dark Mode Icon Fixes & Security Hardening 🛡️ |
