@@ -32,14 +32,17 @@ Short overview summary of what this release is about.
 
 | Version | Notes |
 |---------|-------|
-| v1.2.0  | Initial release |
-| v1.3.0  | Liquid Glass Pill Dock, mini player, and settings menu |
-| v1.3.1  | trap SIGHUP and PID checking to stabilize update relauncher |
-| v1.3.2  | Pill layout padding and playback interaction adjustments |
-| v1.3.3  | Spacebar play/pause focus preservation (.focusable(false)) |
-| v1.3.4  | Relauncher output logging redirect for diagnostic testing |
-| v1.3.5  | Switch update folder to /tmp to bypass macOS TCC security prompts |
-| v1.3.6  | Build system and dependency cleanup |
-| v1.3.7  | OLED mode style updates and floating pill menu layout refinements |
-| v1.4.0  | Redesigned app icon scaling, automated updater fixes |
-| v1.4.1  | Pure transparent app icon & target 15.0 to fix dark/tinted modes |
+| v1.0.0  | Initial release with SettingsView, auto-skip, OLED mode, and media controls |
+| v1.1.0  | Add floating Liquid Glass control dock with auto-hide |
+| v1.1.1  | Spoof desktop Safari User-Agent to enable desktop Netflix features |
+| v1.2.0  | Native Auto-Updater & Custom Branded DMG 🚀 |
+| v1.3.0  | Dynamic Video Quality & Liquid Glass Settings 🚀 |
+| v1.3.1  | Robust Updater Caches & Native Markdown Rendering 🛠️ |
+| v1.3.2  | Bundle ID Cleanups & Safari 18 DRM Profiles 🛠️ |
+| v1.3.3  | Zero-Click Auto-Updates & Clean Release Notes 🚀 |
+| v1.3.4  | Automated Zero-Click Updates & Clean Changelog rendering 🚀 |
+| v1.3.5  | Sandbox Entitlements & Background Updater Authorization 🛠️ |
+| v1.3.6  | Security Auditing & Playback Controls Fixes 🛡️ |
+| v1.3.7  | Installer Permission Bypass & Playback Interaction Fixes 🛠️ |
+| v1.4.0  | Clean Transparent App Icon, Updater & Playback Fixes 🚀 |
+| v1.4.1  | macOS Sequoia Tinted & Dark Mode Icon Fixes 🎨 |
