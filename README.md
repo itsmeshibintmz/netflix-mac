@@ -1,13 +1,9 @@
-![](https://komarev.com/ghpvc/?username=itsmeshibintmz&repo=netflix-mac&color=red)
-![Swift](https://img.shields.io/badge/Swift-5.9-F05138?logo=swift&logoColor=white)
-![macOS](https://img.shields.io/badge/macOS-15+-000000?logo=apple&logoColor=white)
-![License](https://img.shields.io/github/license/itsmeshibintmz/netflix-mac)
-![Release](https://img.shields.io/github/v/release/itsmeshibintmz/netflix-mac)
-![Downloads](https://img.shields.io/github/downloads/itsmeshibintmz/netflix-mac/total)
-![Last Commit](https://img.shields.io/github/last-commit/itsmeshibintmz/netflix-mac)
-![GitHub stars](https://img.shields.io/github/stars/itsmeshibintmz/netflix-mac?style=social)
-
 # 🍿 Netflix for macOS
+
+[![GitHub Downloads](https://img.shields.io/github/downloads/itsmeshibintmz/netflix-mac/total?style=flat-square&logo=apple&label=Downloads&color=2d5a27)](https://github.com/itsmeshibintmz/netflix-mac/releases)
+[![GitHub Stars](https://img.shields.io/github/stars/itsmeshibintmz/netflix-mac?style=flat-square&logo=github&label=Stars&color=81b64c)](https://github.com/itsmeshibintmz/netflix-mac/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/itsmeshibintmz/netflix-mac?style=flat-square&logo=github&label=Forks&color=4a90d9)](https://github.com/itsmeshibintmz/netflix-mac/forks)
+[![Latest Release](https://img.shields.io/github/v/release/itsmeshibintmz/netflix-mac?style=flat-square&logo=github&label=Latest&color=555)](https://github.com/itsmeshibintmz/netflix-mac/releases/latest)
 
 > The native macOS Netflix app everyone has been waiting for.
 
