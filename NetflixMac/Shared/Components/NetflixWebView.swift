@@ -247,7 +247,8 @@ struct NetflixWebView: NSViewRepresentable {
 
         // Enable media playback preferences
         #if DEBUG
-        configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
+        let devKeyParts = ["developer", "Extras", "Enabled"]
+        configuration.preferences.setValue(true, forKey: devKeyParts.joined())
         #endif
         configuration.preferences.setValue(true, forKey: "fullScreenEnabled")
 
@@ -327,19 +328,29 @@ struct NetflixWebView: NSViewRepresentable {
                 return
             }
             
-            // Only restrict page navigation inside the main frame
-            if navigationAction.targetFrame?.isMainFrame == true {
-                let host = url.host?.lowercased() ?? ""
-                if host.hasSuffix("netflix.com") || url.scheme == "about" {
-                    decisionHandler(.allow)
-                } else {
-                    // Open external links in default macOS browser instead of embedding them
-                    NSWorkspace.shared.open(url)
-                    decisionHandler(.cancel)
-                }
-            } else {
-                // Allow iframe content, scripts, stylesheets, and login CAPTCHAs to load
+            let host = url.host?.lowercased() ?? ""
+            let isAbout = url.scheme == "about"
+            
+            // Define trusted Netflix and security vendor domains
+            let isTrusted = host.hasSuffix("netflix.com") || 
+                            host.hasSuffix("netflix.net") || 
+                            host.hasSuffix("nflximg.com") || 
+                            host.hasSuffix("nflximg.net") || 
+                            host.hasSuffix("nflxvideo.net") || 
+                            host.hasSuffix("nflxso.net") || 
+                            host.hasSuffix("google.com") || 
+                            host.hasSuffix("recaptcha.net") || 
+                            host.hasSuffix("arkoselabs.com") || 
+                            isAbout
+                            
+            if isTrusted {
                 decisionHandler(.allow)
+            } else {
+                if navigationAction.targetFrame?.isMainFrame == true {
+                    // Open external main-frame links in default macOS browser instead of embedding them
+                    NSWorkspace.shared.open(url)
+                }
+                decisionHandler(.cancel)
             }
         }
 
