@@ -14,6 +14,10 @@ echo "📦 Packaging custom branded DMG..."
 # Cleanup old DMG
 rm -f ~/Desktop/Netflix.dmg
 
+# Deep code sign app bundle and embedded frameworks (Sparkle) with ad-hoc signature
+echo "🔐 Deep signing app bundle and embedded frameworks..."
+codesign --force --deep --sign - "./build/Build/Products/Release/Netflix.app"
+
 # Create temp source directory for packaging
 mkdir -p ./build/dmg_temp
 cp -R "./build/Build/Products/Release/Netflix.app" ./build/dmg_temp/

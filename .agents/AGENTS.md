@@ -50,3 +50,4 @@ Short overview summary of what this release is about.
 | v1.4.1  | macOS Sequoia Tinted & Dark Mode Icon Fixes 🎨 |
 | v1.4.2  | macOS Sequoia Tinted & Dark Mode Icon Fixes & Security Hardening 🛡️ |
 | v1.5.0  | Sparkle 2 Auto-Updater Engine & Kaset-Style UI Redesign 🚀 |
+| v1.5.1  | Deep Code Signing Fix & Sparkle Framework Dyld Loading 🛡️ |
