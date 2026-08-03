@@ -1,7 +1,8 @@
 // MARK: - UpdateSheetView.swift
-// A Liquid Glass styled modal view presenting updates or changelogs to the user.
+// A Kaset-style modal view presenting application updates or changelogs to the user.
 
 import SwiftUI
+import AppKit
 
 struct UpdateSheetView: View {
     let title: String
@@ -41,7 +42,6 @@ struct UpdateSheetView: View {
             
             if trimmed.hasPrefix("# ") {
                 let text = trimmed.dropFirst(2).trimmingCharacters(in: .whitespaces)
-                // Filter out version/latest title duplicate
                 if text.contains(version) || text.lowercased().contains("version") || text.lowercased().contains("latest") {
                     continue
                 }
@@ -68,83 +68,154 @@ struct UpdateSheetView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            // Header Group
-            VStack(spacing: 8) {
-                HStack(spacing: 8) {
-                    Image(systemName: "arrow.down.circle.fill")
-                        .font(.system(size: 24))
-                        .foregroundStyle(Color.netflixRed)
-                    Text(title)
-                        .font(.system(size: 20, weight: .black))
-                        .foregroundStyle(.white)
-                }
-                
-                Text("Version \(version)")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Color.white.opacity(0.6))
-            }
-            .padding(.top, 8)
+            // MARK: - Header View (Kaset style)
+            headerView
 
-            // Scrollable Changelog Box
+            // MARK: - Content Card (Kaset style)
+            contentCard
+
+            // MARK: - Footer View (Kaset style)
+            footerView
+        }
+        .padding(24)
+        .frame(width: 580)
+        .frame(height: 540)
+        .background(
+            RoundedRectangle(cornerRadius: 32, style: .continuous)
+                .fill(.ultraThinMaterial)
+                .shadow(color: .black.opacity(0.4), radius: 24, x: 0, y: 12)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 32, style: .continuous)
+                .stroke(Color.white.opacity(0.12), lineWidth: 1)
+        )
+        .preferredColorScheme(.dark)
+    }
+
+    // MARK: - Header Component
+    private var headerView: some View {
+        VStack(spacing: 14) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    .fill(Color.netflixRed.opacity(0.15))
+                    .frame(width: 84, height: 84)
+
+                Image(nsImage: NSApp.applicationIconImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 54, height: 54)
+            }
+
+            Text("Version \(version)")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(Color.white.opacity(0.7))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(
+                    Capsule()
+                        .fill(Color.white.opacity(0.08))
+                        .overlay(Capsule().stroke(Color.white.opacity(0.12), lineWidth: 1))
+                )
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    // MARK: - Content Card Component
+    private var contentCard: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 8) {
+                Image(systemName: "doc.text")
+                    .font(.system(size: 13, weight: .semibold))
+
+                Text("Release Notes")
+                    .font(.system(size: 13, weight: .semibold))
+
+                Spacer()
+            }
+            .foregroundStyle(Color.white.opacity(0.7))
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
+            .padding(.bottom, 12)
+
+            Divider()
+                .background(Color.white.opacity(0.1))
+
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     ForEach(changelogLines) { line in
                         switch line.type {
                         case .title:
                             Text(line.text)
                                 .font(.system(size: 14, weight: .bold))
                                 .foregroundStyle(.white)
-                                .padding(.top, 6)
+                                .padding(.top, 4)
                         case .header:
                             Text(line.text)
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundStyle(Color.netflixRed)
                                 .padding(.top, 4)
                         case .bullet:
-                            HStack(alignment: .top, spacing: 6) {
+                            HStack(alignment: .top, spacing: 8) {
                                 Text("•")
                                     .font(.system(size: 12, weight: .bold))
                                     .foregroundStyle(Color.netflixRed)
                                 Text(LocalizedStringKey(line.text))
-                                    .font(.system(size: 12))
+                                    .font(.system(size: 12.5))
                                     .foregroundStyle(Color.white.opacity(0.85))
                                     .multilineTextAlignment(.leading)
                                     .lineSpacing(3)
                             }
-                            .padding(.leading, 6)
+                            .padding(.leading, 4)
                         case .paragraph:
                             Text(LocalizedStringKey(line.text))
-                                .font(.system(size: 12))
+                                .font(.system(size: 12.5))
                                 .foregroundStyle(Color.white.opacity(0.8))
                                 .multilineTextAlignment(.leading)
                                 .lineSpacing(4)
                         }
                     }
                 }
-                .padding(16)
+                .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(height: 220)
-            .background(Color.black.opacity(0.3))
-            .cornerRadius(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
-            )
+        }
+        .frame(maxHeight: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .fill(Color.black.opacity(0.35))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+        )
+    }
 
-            // Action / Progress Group
+    // MARK: - Footer Component
+    private var footerView: some View {
+        HStack {
+            Link(destination: URL(string: "https://github.com/itsmeshibintmz/netflix-mac/releases")!) {
+                HStack(spacing: 4) {
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 12, weight: .bold))
+                    Text("Learn more")
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .foregroundStyle(Color.netflixRed)
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
             if isDownloading {
-                VStack(spacing: 8) {
+                VStack(spacing: 6) {
                     ProgressView(value: downloadProgress, total: 1.0)
                         .tint(Color.netflixRed)
                         .progressViewStyle(.linear)
-                        
-                    Text("Downloading update... \(Int(downloadProgress * 100))%")
+                        .frame(width: 140)
+                    Text("Downloading... \(Int(downloadProgress * 100))%")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(Color.white.opacity(0.6))
                 }
-                .padding(.horizontal, 8)
-                .padding(.bottom, 8)
             } else {
                 HStack(spacing: 12) {
                     if let cancelAction = cancelAction {
@@ -152,42 +223,30 @@ struct UpdateSheetView: View {
                             Text("Later")
                                 .font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(Color.white.opacity(0.8))
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 36)
+                                .padding(.horizontal, 18)
+                                .frame(height: 38)
                                 .background(Color.white.opacity(0.08))
-                                .cornerRadius(8)
+                                .cornerRadius(12)
                         }
                         .buttonStyle(.plain)
                         .hoverLift(scale: 1.03)
                     }
-                    
+
                     Button(action: primaryAction) {
                         Text(primaryButtonText)
                             .font(.system(size: 13, weight: .bold))
                             .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 36)
+                            .padding(.horizontal, 24)
+                            .frame(height: 38)
                             .background(Color.netflixRed)
-                            .cornerRadius(8)
+                            .cornerRadius(12)
                     }
                     .buttonStyle(.plain)
                     .hoverLift(scale: 1.03)
-                    .glow(color: Color.netflixRed, radius: 10)
+                    .glow(color: Color.netflixRed, radius: 8)
                 }
-                .padding(.bottom, 4)
             }
         }
-        .padding(24)
-        .frame(width: 480, height: 400)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.5), radius: 20, x: 0, y: 10)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .stroke(Color.white.opacity(0.12), lineWidth: 1)
-        )
-        .preferredColorScheme(.dark)
+        .padding(.horizontal, 4)
     }
 }

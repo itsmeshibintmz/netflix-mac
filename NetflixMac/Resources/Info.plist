@@ -59,5 +59,13 @@
 
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.entertainment</string>
+
+	<!-- Sparkle Auto-Updater -->
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/itsmeshibintmz/netflix-mac/main/appcast.xml</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
 </dict>
 </plist>

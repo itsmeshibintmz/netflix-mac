@@ -19,6 +19,8 @@
 		AA010000000000A1 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A1 /* UpdateManager.swift */; };
 		AA010000000000A2 /* UpdateSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A2 /* UpdateSheetView.swift */; };
 		AA010000000000B1 /* QualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000B1 /* QualityLevel.swift */; };
+		C3FB98E28840880584D7BCC5 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 1D1E0DDAC362A04F443B42C8 /* Sparkle */; };
+		FF653D37716DAF499065D235 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = "TEMP_1EAC3C0A-0156-4392-8759-CE1B25C6FF0C" /* Sparkle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF653D37716DAF499065D235 /* Sparkle in Frameworks */,
+				C3FB98E28840880584D7BCC5 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +193,9 @@
 			dependencies = (
 			);
 			name = Netflix;
+			packageProductDependencies = (
+				1D1E0DDAC362A04F443B42C8 /* Sparkle */,
+			);
 			productName = Netflix;
 			productReference = CC000000000000001 /* Netflix.app */;
 			productType = "com.apple.product-type.application";
@@ -217,6 +224,9 @@
 				Base,
 			);
 			mainGroup = FF000000000000000;
+			packageReferences = (
+				32A2AB72387B61410ED30184 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			productRefGroup = FF000000000000002 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -366,7 +376,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -393,7 +403,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -425,6 +435,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		32A2AB72387B61410ED30184 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1D1E0DDAC362A04F443B42C8 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 32A2AB72387B61410ED30184 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+		"TEMP_1EAC3C0A-0156-4392-8759-CE1B25C6FF0C" /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 32A2AB72387B61410ED30184 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EE000000000000001 /* Project object */;
 }

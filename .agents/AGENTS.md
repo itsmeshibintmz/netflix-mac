@@ -28,6 +28,8 @@ Short overview summary of what this release is about.
 * **Another Fix:** Description.
 ```
 
+5. **Always place clean DMG on Desktop** — ensure `./build_dmg.sh` places the generated `Netflix.dmg` directly on the Desktop (`~/Desktop/Netflix.dmg`) so it can be attached to the GitHub release or installed locally.
+
 ## Version History Reference
 
 | Version | Notes |
@@ -47,3 +49,4 @@ Short overview summary of what this release is about.
 | v1.4.0  | Clean Transparent App Icon, Updater & Playback Fixes 🚀 |
 | v1.4.1  | macOS Sequoia Tinted & Dark Mode Icon Fixes 🎨 |
 | v1.4.2  | macOS Sequoia Tinted & Dark Mode Icon Fixes & Security Hardening 🛡️ |
+| v1.5.0  | Sparkle 2 Auto-Updater Engine & Kaset-Style UI Redesign 🚀 |
