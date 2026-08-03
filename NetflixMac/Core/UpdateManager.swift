@@ -50,12 +50,8 @@ final class UpdateManager: ObservableObject {
 
     /// Primary check run on application launch or manually via menu
     func checkForUpdates(manual: Bool = false) {
-        if manual {
-            updaterController.checkForUpdates(nil)
-        } else {
-            updaterController.updater.checkForUpdatesInBackground()
-            queryGitHubReleaseAPI(manual: false)
-        }
+        self.isUpToDate = false
+        queryGitHubReleaseAPI(manual: manual)
     }
 
     private func queryGitHubReleaseAPI(manual: Bool) {

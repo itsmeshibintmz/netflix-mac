@@ -83,7 +83,7 @@ struct NetflixWebViewContainer: View {
         .onAppear {
             updateManager.checkForUpdates()
         }
-        // Auto-Update Sheet
+        // Auto-Update Sheet (Custom Kaset UI)
         .sheet(isPresented: $updateManager.isUpdateAvailable) {
             UpdateSheetView(
                 title: "Update Available",
