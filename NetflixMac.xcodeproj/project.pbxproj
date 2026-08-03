@@ -17,6 +17,7 @@
 		AA01000000000029 /* NetflixWebViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000029 /* NetflixWebViewContainer.swift */; };
 		AA01000000000030 /* LiquidGlassPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000030 /* LiquidGlassPill.swift */; };
 		AA010000000000A1 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A1 /* UpdateManager.swift */; };
+		AA010000000000B2 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000B2 /* NowPlayingManager.swift */; };
 		AA010000000000A2 /* UpdateSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A2 /* UpdateSheetView.swift */; };
 		AA010000000000A3 /* VersionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A3 /* VersionHistoryView.swift */; };
 		AA010000000000B1 /* QualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000B1 /* QualityLevel.swift */; };
@@ -36,6 +37,7 @@
 		AF01000000000029 /* NetflixWebViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetflixWebViewContainer.swift; sourceTree = "<group>"; };
 		AF01000000000030 /* LiquidGlassPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassPill.swift; sourceTree = "<group>"; };
 		AF010000000000A1 /* UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
+		AF010000000000B2 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		AF010000000000A2 /* UpdateSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSheetView.swift; sourceTree = "<group>"; };
 		AF010000000000A3 /* VersionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionHistoryView.swift; sourceTree = "<group>"; };
 		AF010000000000B1 /* QualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityLevel.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				AF010000000000A1 /* UpdateManager.swift */,
+				AF010000000000B2 /* NowPlayingManager.swift */,
 				AF010000000000B1 /* QualityLevel.swift */,
 				FF000000000000008 /* Extensions */,
 			);
@@ -264,6 +267,7 @@
 				AA01000000000030 /* LiquidGlassPill.swift in Sources */,
 				AA0100000000001E /* SettingsView.swift in Sources */,
 				AA010000000000A1 /* UpdateManager.swift in Sources */,
+				AA010000000000B2 /* NowPlayingManager.swift in Sources */,
 				AA010000000000A2 /* UpdateSheetView.swift in Sources */,
 				AA010000000000A3 /* VersionHistoryView.swift in Sources */,
 				AA010000000000B1 /* QualityLevel.swift in Sources */,
@@ -380,7 +384,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.6.2;
+				MARKETING_VERSION = 1.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -407,7 +411,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.6.2;
+				MARKETING_VERSION = 1.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

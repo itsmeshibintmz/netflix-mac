@@ -135,14 +135,10 @@ final class UpdateManager: ObservableObject {
             .store(in: &cancellables)
     }
 
-    /// Downloads and installs the latest update
+    /// Triggers Sparkle's native automatic updater flow
     func downloadAndInstall() {
-        if let url = downloadURL {
-            NSWorkspace.shared.open(url)
-            isUpdateAvailable = false
-        } else {
-            updaterController.checkForUpdates(nil)
-        }
+        isUpdateAvailable = false
+        updaterController.checkForUpdates(nil)
     }
 }
 

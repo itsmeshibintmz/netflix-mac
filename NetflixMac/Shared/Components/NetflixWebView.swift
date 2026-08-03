@@ -98,24 +98,55 @@ struct NetflixWebView: NSViewRepresentable {
                 let title = "Netflix";
                 let subtitle = "";
 
-                let titleEl = document.querySelector('.video-title');
+                let titleEl = document.querySelector('[data-uia="video-title"]') || document.querySelector('.video-title') || document.querySelector('.watch-video--player-view');
                 if (titleEl) {
-                    let h4 = titleEl.querySelector('h4');
-                    let span = titleEl.querySelector('span');
-                    if (h4) title = h4.innerText;
-                    if (span) subtitle = span.innerText;
-                } else {
-                    let docTitle = document.title;
-                    if (docTitle && docTitle.startsWith("Netflix -")) {
-                        title = docTitle.replace("Netflix -", "").trim();
+                    let h4 = titleEl.querySelector('h4') || titleEl.querySelector('.header-text');
+                    let span = titleEl.querySelector('span') || titleEl.querySelector('.subtitle-text');
+                    if (h4 && h4.innerText) title = h4.innerText.trim();
+                    if (span && span.innerText) subtitle = span.innerText.trim();
+                    if (!h4 && titleEl.innerText) {
+                        let parts = titleEl.innerText.split('\n');
+                        if (parts.length > 0) title = parts[0].trim();
+                        if (parts.length > 1) subtitle = parts[1].trim();
                     }
                 }
+
+                if (title === "Netflix" || !title) {
+                    let docTitle = document.title || "";
+                    if (docTitle.includes("Netflix -")) {
+                        let clean = docTitle.replace("Netflix -", "").trim();
+                        if (clean.includes(":") || clean.includes("-")) {
+                            let p = clean.split(new RegExp('[:\\\\-]'));
+                            title = p[0].trim();
+                            subtitle = p.slice(1).join(" - ").trim();
+                        } else {
+                            title = clean;
+                        }
+                    } else if (docTitle && docTitle !== "Netflix") {
+                        title = docTitle;
+                    }
+                }
+
+                let artworkURL = video.poster || "";
 
                 if (navigator.mediaSession) {
                     navigator.mediaSession.metadata = new MediaMetadata({
                         title: title,
-                        artist: "Netflix",
-                        album: subtitle
+                        artist: subtitle.length > 0 ? subtitle : "Netflix",
+                        album: "Netflix"
+                    });
+                }
+
+                // Post message to Swift native NowPlayingManager
+                if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.netflixMac) {
+                    window.webkit.messageHandlers.netflixMac.postMessage({
+                        action: "updateNowPlaying",
+                        title: title,
+                        subtitle: subtitle,
+                        duration: video.duration || 0,
+                        currentTime: video.currentTime || 0,
+                        isPlaying: !video.paused,
+                        artworkURL: artworkURL
                     });
                 }
             }
@@ -192,13 +223,18 @@ struct NetflixWebView: NSViewRepresentable {
                 if (el) {
                     if (video !== el) {
                         video = el;
-                        ['play', 'pause', 'durationchange'].forEach(evt => {
+                        ['play', 'pause', 'durationchange', 'seeking', 'seeked'].forEach(evt => {
                             video.addEventListener(evt, updateMediaSession);
                         });
-                        updateMediaSession();
                     }
+                    updateMediaSession();
                 } else {
-                    video = null;
+                    if (video !== null) {
+                        video = null;
+                        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.netflixMac) {
+                            window.webkit.messageHandlers.netflixMac.postMessage({ action: "clearNowPlaying" });
+                        }
+                    }
                 }
             }, 1000);
 
@@ -274,6 +310,9 @@ struct NetflixWebView: NSViewRepresentable {
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
+
+        // Register active webView with NowPlayingManager for remote media commands
+        NowPlayingManager.shared.webView = webView
 
         // Resolve user agent dynamically based on saved quality settings
         let savedQuality = UserDefaults.standard.string(forKey: "streamingQuality") ?? "Auto"
@@ -376,13 +415,35 @@ struct NetflixWebView: NSViewRepresentable {
             guard message.name == "netflixMac" else { return }
             guard let body = message.body as? [String: Any],
                   let action = body["action"] as? String else { return }
-            
+
             DispatchQueue.main.async {
+                if action == "updateNowPlaying" {
+                    let title = body["title"] as? String ?? ""
+                    let subtitle = body["subtitle"] as? String ?? ""
+                    let duration = body["duration"] as? Double ?? 0
+                    let currentTime = body["currentTime"] as? Double ?? 0
+                    let isPlaying = body["isPlaying"] as? Bool ?? false
+                    let artworkURL = body["artworkURL"] as? String
+
+                    NowPlayingManager.shared.updateNowPlaying(
+                        title: title,
+                        subtitle: subtitle,
+                        duration: duration,
+                        currentTime: currentTime,
+                        isPlaying: isPlaying,
+                        artworkURL: artworkURL
+                    )
+                    return
+                } else if action == "clearNowPlaying" {
+                    NowPlayingManager.shared.clearNowPlaying()
+                    return
+                }
+
                 guard let webView = message.webView,
                       let window = webView.window else { return }
-                
+
                 let isFullscreen = window.styleMask.contains(.fullScreen)
-                
+
                 if action == "enterFullscreen" {
                     if !isFullscreen {
                         window.toggleFullScreen(nil)
