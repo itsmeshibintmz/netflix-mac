@@ -53,10 +53,8 @@ final class UpdateManager: ObservableObject {
             updaterController.checkForUpdates(nil)
         } else {
             updaterController.updater.checkForUpdatesInBackground()
+            queryGitHubReleaseAPI(manual: false)
         }
-        
-        // Query GitHub API for custom UI modal data if needed
-        queryGitHubReleaseAPI(manual: manual)
     }
 
     private func queryGitHubReleaseAPI(manual: Bool) {

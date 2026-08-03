@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>Netflix macOS Updates</title>
+        <link>https://github.com/itsmeshibintmz/netflix-mac/releases</link>
+        <description>Most recent updates for Netflix for macOS.</description>
+        <language>en</language>
+        <item>
+            <title>Version 1.5.2</title>
+            <sparkle:releaseNotesLink>https://github.com/itsmeshibintmz/netflix-mac/releases/tag/v.1.5.2</sparkle:releaseNotesLink>
+            <pubDate>Mon, 03 Aug 2026 17:05:00 +0530</pubDate>
+            <enclosure url="https://github.com/itsmeshibintmz/netflix-mac/releases/download/v.1.5.2/Netflix.dmg" sparkle:version="1.5.2" sparkle:shortVersionString="1.5.2" type="application/octet-stream" />
+        </item>
+    </channel>
+</rss>
