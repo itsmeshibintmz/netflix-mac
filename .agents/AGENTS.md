@@ -57,3 +57,5 @@ Short overview summary of what this release is about.
 | v1.5.5  | EdDSA Cryptographic Signature Verification for Sparkle Updates 🔒 |
 | v1.5.6  | Native Version History Viewer & Release Explorer Modal 📜 |
 | v1.5.7  | Primary Kaset UI Updater Flow & Seamless Auto-Update Checks 🎨 |
+| v1.6.0  | Navigation Bar Spacing & macOS Window Controls Gap 🎨 |
+| v1.6.1  | In-Modal Version History Navigation & Direct DMG Downloader 🚀 |

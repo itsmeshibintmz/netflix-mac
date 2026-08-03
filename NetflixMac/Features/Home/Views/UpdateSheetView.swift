@@ -66,16 +66,49 @@ struct UpdateSheetView: View {
         return result
     }
 
+    @State private var showingVersionHistoryInsideSheet = false
+
     var body: some View {
-        VStack(spacing: 20) {
-            // MARK: - Header View (Kaset style)
-            headerView
+        VStack(spacing: 16) {
+            if showingVersionHistoryInsideSheet {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Button(action: {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                showingVersionHistoryInsideSheet = false
+                            }
+                        }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 13, weight: .bold))
+                                Text("Back to Update")
+                                    .font(.system(size: 13, weight: .bold))
+                            }
+                            .foregroundStyle(Color.netflixRed)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.white.opacity(0.06))
+                            .cornerRadius(8)
+                        }
+                        .buttonStyle(.plain)
 
-            // MARK: - Content Card (Kaset style)
-            contentCard
+                        Spacer()
+                    }
 
-            // MARK: - Footer View (Kaset style)
-            footerView
+                    VersionHistoryView()
+                }
+            } else {
+                VStack(spacing: 20) {
+                    // MARK: - Header View (Kaset style)
+                    headerView
+
+                    // MARK: - Content Card (Kaset style)
+                    contentCard
+
+                    // MARK: - Footer View (Kaset style)
+                    footerView
+                }
+            }
         }
         .padding(24)
         .frame(width: 580)
@@ -193,7 +226,11 @@ struct UpdateSheetView: View {
     // MARK: - Footer Component
     private var footerView: some View {
         HStack {
-            Button(action: { UpdateManager.shared.showVersionHistory = true }) {
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    showingVersionHistoryInsideSheet = true
+                }
+            }) {
                 HStack(spacing: 4) {
                     Image(systemName: "clock.arrow.circlepath")
                         .font(.system(size: 12, weight: .bold))

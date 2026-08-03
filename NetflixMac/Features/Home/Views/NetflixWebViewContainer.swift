@@ -39,10 +39,13 @@ struct NetflixWebViewContainer: View {
             )
             .ignoresSafeArea()
 
-            // Transparent titlebar drag region (allows window dragging while keeping full-bleed look)
-            DraggableArea()
-                .frame(height: 28)
-                .ignoresSafeArea(edges: .top)
+            // Transparent titlebar drag region at top of window
+            VStack {
+                DraggableArea()
+                    .frame(height: 38)
+                    .ignoresSafeArea(edges: .top)
+                Spacer()
+            }
 
             // Floating Liquid Glass Control Pill Dock
             LiquidGlassPill(

@@ -40,12 +40,30 @@ struct NetflixWebView: NSViewRepresentable {
         let cssSource = """
         var style = document.createElement('style');
         style.innerHTML = `
-            /* Shift only the logo to make room for window controls, others slide over naturally */
-            .logo, 
-            .brand-logo, 
-            #netflix-brand-logo, 
-            svg.logo {
+            /* Shift logo horizontally to clear window controls */
+            .pinning-header .logo, 
+            .pinning-header .brand-logo, 
+            .pinning-header #netflix-brand-logo, 
+            .pinning-header svg.logo,
+            .pinning-header a.logo {
                 margin-left: 80px !important;
+            }
+
+            /* Move video player back arrow safely below traffic light window controls */
+            .watch-video--back-container {
+                top: 36px !important;
+                left: 24px !important;
+            }
+
+            /* Make top header draggable */
+            .pinning-header-container {
+                padding-top: 6px !important;
+                -webkit-app-region: drag !important;
+            }
+
+            /* Ensure clickable elements remain interactive */
+            a, button, input, select, textarea, [role="button"], .nav-element, .navigation-tab {
+                -webkit-app-region: no-drag !important;
             }
 
             /* Custom elegant, ultra-thin scrollbars */
