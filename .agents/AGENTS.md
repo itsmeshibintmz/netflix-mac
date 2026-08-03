@@ -59,3 +59,4 @@ Short overview summary of what this release is about.
 | v1.5.7  | Primary Kaset UI Updater Flow & Seamless Auto-Update Checks 🎨 |
 | v1.6.0  | Navigation Bar Spacing & macOS Window Controls Gap 🎨 |
 | v1.6.1  | In-Modal Version History Navigation & Direct DMG Downloader 🚀 |
+| v1.6.2  | Dual-Mode Version History Sizing & Responsive Modal Fitting 🎨 |

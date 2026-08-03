@@ -95,7 +95,7 @@ struct UpdateSheetView: View {
                         Spacer()
                     }
 
-                    VersionHistoryView()
+                    VersionHistoryView(showHeader: false)
                 }
             } else {
                 VStack(spacing: 20) {

@@ -43,6 +43,8 @@ struct ReleaseItem: Identifiable, Decodable {
 
 struct VersionHistoryView: View {
     @Environment(\.dismiss) private var dismiss
+    var showHeader: Bool = true
+
     @State private var releases: [ReleaseItem] = []
     @State private var selectedReleaseID: String? = nil
     @State private var isLoading = true
@@ -95,34 +97,36 @@ struct VersionHistoryView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // MARK: - Header Bar
-            HStack {
-                HStack(spacing: 10) {
-                    Image(systemName: "clock.arrow.circlepath")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundStyle(Color.netflixRed)
+            // MARK: - Optional Header Bar
+            if showHeader {
+                HStack {
+                    HStack(spacing: 10) {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundStyle(Color.netflixRed)
 
-                    Text("Version History")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundStyle(.white)
+                        Text("Version History")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
+
+                    Spacer()
+
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 20))
+                            .foregroundStyle(Color.white.opacity(0.6))
+                    }
+                    .buttonStyle(.plain)
+                    .hoverLift(scale: 1.1)
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 14)
 
-                Spacer()
-
-                Button(action: { dismiss() }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 20))
-                        .foregroundStyle(Color.white.opacity(0.6))
-                }
-                .buttonStyle(.plain)
-                .hoverLift(scale: 1.1)
+                Divider()
+                    .background(Color.white.opacity(0.1))
             }
-            .padding(.horizontal, 24)
-            .padding(.top, 20)
-            .padding(.bottom, 16)
-
-            Divider()
-                .background(Color.white.opacity(0.1))
 
             // MARK: - Content Body
             if isLoading {
@@ -152,19 +156,19 @@ struct VersionHistoryView: View {
                 HStack(spacing: 0) {
                     // MARK: - Left Release Sidebar
                     ScrollView {
-                        VStack(spacing: 8) {
+                        VStack(spacing: 6) {
                             ForEach(releases) { release in
                                 let isSelected = (selectedRelease?.id == release.id)
                                 Button(action: { selectedReleaseID = release.id }) {
                                     HStack {
-                                        VStack(alignment: .leading, spacing: 4) {
+                                        VStack(alignment: .leading, spacing: 2) {
                                             Text(release.displayVersion)
-                                                .font(.system(size: 14, weight: .bold))
+                                                .font(.system(size: 13, weight: .bold))
                                                 .foregroundStyle(isSelected ? .white : Color.white.opacity(0.8))
 
                                             if !release.formattedDate.isEmpty {
                                                 Text(release.formattedDate)
-                                                    .font(.system(size: 11))
+                                                    .font(.system(size: 10))
                                                     .foregroundStyle(isSelected ? Color.white.opacity(0.8) : Color.white.opacity(0.5))
                                             }
                                         }
@@ -173,27 +177,27 @@ struct VersionHistoryView: View {
 
                                         if isSelected {
                                             Image(systemName: "chevron.right")
-                                                .font(.system(size: 11, weight: .bold))
+                                                .font(.system(size: 10, weight: .bold))
                                                 .foregroundStyle(Color.netflixRed)
                                         }
                                     }
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 10)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 8)
                                     .background(
-                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        RoundedRectangle(cornerRadius: 10, style: .continuous)
                                             .fill(isSelected ? Color.netflixRed.opacity(0.2) : Color.white.opacity(0.04))
                                     )
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        RoundedRectangle(cornerRadius: 10, style: .continuous)
                                             .stroke(isSelected ? Color.netflixRed.opacity(0.4) : Color.white.opacity(0.06), lineWidth: 1)
                                     )
                                 }
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(16)
+                        .padding(10)
                     }
-                    .frame(width: 200)
+                    .frame(width: 145)
 
                     Divider()
                         .background(Color.white.opacity(0.1))
@@ -201,19 +205,19 @@ struct VersionHistoryView: View {
                     // MARK: - Right Detail Pane
                     if let selected = selectedRelease {
                         ScrollView {
-                            VStack(alignment: .leading, spacing: 14) {
+                            VStack(alignment: .leading, spacing: 12) {
                                 HStack {
                                     Text(selected.name ?? selected.displayVersion)
-                                        .font(.system(size: 18, weight: .bold))
+                                        .font(.system(size: 16, weight: .bold))
                                         .foregroundStyle(.white)
 
                                     Spacer()
 
                                     Text(selected.displayVersion)
-                                        .font(.system(size: 12, weight: .semibold))
+                                        .font(.system(size: 11, weight: .semibold))
                                         .foregroundStyle(Color.white.opacity(0.7))
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 4)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 3)
                                         .background(Capsule().fill(Color.netflixRed.opacity(0.2)))
                                 }
 
@@ -224,52 +228,43 @@ struct VersionHistoryView: View {
                                     switch line.type {
                                     case .title:
                                         Text(line.text)
-                                            .font(.system(size: 14, weight: .bold))
+                                            .font(.system(size: 13, weight: .bold))
                                             .foregroundStyle(.white)
-                                            .padding(.top, 4)
+                                            .padding(.top, 2)
                                     case .header:
                                         Text(line.text)
-                                            .font(.system(size: 13, weight: .bold))
+                                            .font(.system(size: 12, weight: .bold))
                                             .foregroundStyle(Color.netflixRed)
-                                            .padding(.top, 4)
+                                            .padding(.top, 2)
                                     case .bullet:
-                                        HStack(alignment: .top, spacing: 8) {
+                                        HStack(alignment: .top, spacing: 6) {
                                             Text("•")
-                                                .font(.system(size: 12, weight: .bold))
+                                                .font(.system(size: 11, weight: .bold))
                                                 .foregroundStyle(Color.netflixRed)
                                             Text(LocalizedStringKey(line.text))
-                                                .font(.system(size: 12.5))
+                                                .font(.system(size: 11.5))
                                                 .foregroundStyle(Color.white.opacity(0.85))
                                                 .multilineTextAlignment(.leading)
-                                                .lineSpacing(3)
+                                                .lineSpacing(2)
                                         }
-                                        .padding(.leading, 4)
+                                        .padding(.leading, 2)
                                     case .paragraph:
                                         Text(LocalizedStringKey(line.text))
-                                            .font(.system(size: 12.5))
+                                            .font(.system(size: 11.5))
                                             .foregroundStyle(Color.white.opacity(0.8))
                                             .multilineTextAlignment(.leading)
-                                            .lineSpacing(4)
+                                            .lineSpacing(3)
                                     }
                                 }
                             }
-                            .padding(20)
+                            .padding(14)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                 }
             }
         }
-        .frame(width: 680, height: 480)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.5), radius: 24, x: 0, y: 12)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .stroke(Color.white.opacity(0.12), lineWidth: 1)
-        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .preferredColorScheme(.dark)
         .onAppear {
             fetchReleases()

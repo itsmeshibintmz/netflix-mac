@@ -128,7 +128,17 @@ struct NetflixWebViewContainer: View {
         }
         // Version History Sheet
         .sheet(isPresented: $updateManager.showVersionHistory) {
-            VersionHistoryView()
+            VersionHistoryView(showHeader: true)
+                .frame(width: 680, height: 480)
+                .background(
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                        .shadow(color: .black.opacity(0.5), radius: 24, x: 0, y: 12)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                )
         }
     }
 
