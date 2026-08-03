@@ -52,3 +52,4 @@ Short overview summary of what this release is about.
 | v1.5.0  | Sparkle 2 Auto-Updater Engine & Kaset-Style UI Redesign 🚀 |
 | v1.5.1  | Deep Code Signing Fix & Sparkle Framework Dyld Loading 🛡️ |
 | v1.5.2  | Single Sparkle Updater UI & Feed Fixes 🚀 |
+| v1.5.3  | Version & Build Number Syncing for Sparkle Auto-Updates 🛠️ |
