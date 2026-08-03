@@ -40,6 +40,11 @@ echo "🏷️ Setting custom Desktop icon for the DMG file..."
 # Apply the custom disk icon to the .dmg file itself
 swift -e 'import Cocoa; let img = NSImage(contentsOfFile: "./NetflixMac/Resources/DmgVolumeIcon.icns"); NSWorkspace.shared.setIcon(img, forFile: "/Users/shibin_tmz/Desktop/Netflix.dmg", options: [])'
 
+echo "🔏 Signing DMG package with Sparkle EdDSA key..."
+if [ -f "/tmp/sparkle_tools/bin/sign_update" ]; then
+    /tmp/sparkle_tools/bin/sign_update ~/Desktop/Netflix.dmg
+fi
+
 echo "🧹 Cleaning up build caches..."
 rm -rf ./build
 
