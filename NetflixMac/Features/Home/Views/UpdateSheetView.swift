@@ -193,11 +193,11 @@ struct UpdateSheetView: View {
     // MARK: - Footer Component
     private var footerView: some View {
         HStack {
-            Link(destination: URL(string: "https://github.com/itsmeshibintmz/netflix-mac/releases")!) {
+            Button(action: { UpdateManager.shared.showVersionHistory = true }) {
                 HStack(spacing: 4) {
-                    Image(systemName: "arrow.up.right")
+                    Image(systemName: "clock.arrow.circlepath")
                         .font(.system(size: 12, weight: .bold))
-                    Text("Learn more")
+                    Text("Version History")
                         .font(.system(size: 13, weight: .semibold))
                 }
                 .foregroundStyle(Color.netflixRed)

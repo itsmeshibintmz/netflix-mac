@@ -55,3 +55,4 @@ Short overview summary of what this release is about.
 | v1.5.3  | Version & Build Number Syncing for Sparkle Auto-Updates 🛠️ |
 | v1.5.4  | Full Releases History Link in Sparkle Appcast Feed 🌐 |
 | v1.5.5  | EdDSA Cryptographic Signature Verification for Sparkle Updates 🔒 |
+| v1.5.6  | Native Version History Viewer & Release Explorer Modal 📜 |

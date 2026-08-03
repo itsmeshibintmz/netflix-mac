@@ -21,6 +21,7 @@ final class UpdateManager: ObservableObject {
 
     @Published var showWhatsNew = false
     @Published var whatsNewChangelog = ""
+    @Published var showVersionHistory = false
 
     @Published var isDownloading = false
     @Published var downloadProgress: Double = 0.0

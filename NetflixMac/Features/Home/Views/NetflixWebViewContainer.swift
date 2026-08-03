@@ -117,8 +117,15 @@ struct NetflixWebViewContainer: View {
         // Up-To-Date Dialog (triggers when manual update check is up-to-date)
         .alert("You're up to date!", isPresented: $updateManager.isUpToDate) {
             Button("OK", role: .cancel) {}
+            Button("Version History") {
+                updateManager.showVersionHistory = true
+            }
         } message: {
             Text("Netflix v\(updateManager.currentVersion) is the latest version available.")
+        }
+        // Version History Sheet
+        .sheet(isPresented: $updateManager.showVersionHistory) {
+            VersionHistoryView()
         }
     }
 
