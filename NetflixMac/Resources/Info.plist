@@ -29,13 +29,6 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 
-	<!-- Network Access -->
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
-
 	<!-- Microphone (for future voice search) -->
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Voice search requires microphone access.</string>

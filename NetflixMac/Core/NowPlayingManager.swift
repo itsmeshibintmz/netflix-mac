@@ -1,5 +1,6 @@
 // MARK: - NowPlayingManager.swift
-// Manages macOS System Control Center & Lock Screen Now Playing Metadata & Media Remote Commands.
+// Drives macOS Control Center & Lock Screen Now Playing metadata via MPNowPlayingInfoCenter.
+// navigator.mediaSession in WKWebView does NOT bridge to the system - this native class does.
 
 import Foundation
 import MediaPlayer
@@ -9,12 +10,9 @@ import WebKit
 final class NowPlayingManager: NSObject {
     static let shared = NowPlayingManager()
 
-    private var currentTitle: String = ""
-    private var currentSubtitle: String = ""
     private var currentArtworkURL: String = ""
     private var currentArtworkImage: NSImage? = nil
 
-    // Weak reference to active WKWebView to trigger remote JS control actions
     weak var webView: WKWebView?
 
     override init() {
@@ -23,45 +21,53 @@ final class NowPlayingManager: NSObject {
     }
 
     private func setupRemoteCommandCenter() {
-        let commandCenter = MPRemoteCommandCenter.shared()
+        let cc = MPRemoteCommandCenter.shared()
 
-        // 1. Play Command
-        commandCenter.playCommand.isEnabled = true
-        commandCenter.playCommand.addTarget { [weak self] _ in
-            self?.executeJS("let v = document.querySelector('video'); if (v) v.play();")
+        cc.playCommand.isEnabled = true
+        cc.playCommand.addTarget { [weak self] _ in
+            self?.executeJS("let v=document.querySelector('video');if(v)v.play();")
             return .success
         }
 
-        // 2. Pause Command
-        commandCenter.pauseCommand.isEnabled = true
-        commandCenter.pauseCommand.addTarget { [weak self] _ in
-            self?.executeJS("let v = document.querySelector('video'); if (v) v.pause();")
+        cc.pauseCommand.isEnabled = true
+        cc.pauseCommand.addTarget { [weak self] _ in
+            self?.executeJS("let v=document.querySelector('video');if(v)v.pause();")
             return .success
         }
 
-        // 3. Toggle Play/Pause Command
-        commandCenter.togglePlayPauseCommand.isEnabled = true
-        commandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
-            self?.executeJS("let v = document.querySelector('video'); if (v) { v.paused ? v.play() : v.pause(); }")
+        cc.togglePlayPauseCommand.isEnabled = true
+        cc.togglePlayPauseCommand.addTarget { [weak self] _ in
+            self?.executeJS("let v=document.querySelector('video');if(v){v.paused?v.play():v.pause();}")
             return .success
         }
 
-        // 4. Next Track / Next Episode Command
-        commandCenter.nextTrackCommand.isEnabled = true
-        commandCenter.nextTrackCommand.addTarget { [weak self] _ in
-            self?.executeJS("""
-                let nextBtn = document.querySelector('button[data-uia="next-episode-seamless-button"], .watch-video--next-episode-button');
-                if (nextBtn) nextBtn.click();
-            """)
+        // Next episode — enabled dynamically when Netflix shows the next episode button
+        cc.nextTrackCommand.isEnabled = false
+        cc.nextTrackCommand.addTarget { [weak self] _ in
+            self?.executeJS("let nb=document.querySelector('button[data-uia=\"next-episode-seamless-button\"],.watch-video--next-episode-button,[data-uia=\"next-episode-button\"]');if(nb)nb.click();")
             return .success
         }
 
-        // 5. Seek / Change Playback Position
-        commandCenter.changePlaybackPositionCommand.isEnabled = true
-        commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
-            if let positionEvent = event as? MPChangePlaybackPositionCommandEvent {
-                let targetTime = positionEvent.positionTime
-                self?.executeJS("let v = document.querySelector('video'); if (v) v.currentTime = \(targetTime);")
+        // Previous track — not applicable on Netflix (no previous episode button in player)
+        cc.previousTrackCommand.isEnabled = false
+
+        // Seek backward/forward (10s scrub) — always enabled during playback
+        cc.seekBackwardCommand.isEnabled = true
+        cc.seekBackwardCommand.addTarget { [weak self] _ in
+            self?.executeJS("let v=document.querySelector('video');if(v)v.currentTime=Math.max(0,v.currentTime-10);")
+            return .success
+        }
+        cc.seekForwardCommand.isEnabled = true
+        cc.seekForwardCommand.addTarget { [weak self] _ in
+            self?.executeJS("let v=document.querySelector('video');if(v)v.currentTime=Math.min(v.duration,v.currentTime+10);")
+            return .success
+        }
+
+        cc.changePlaybackPositionCommand.isEnabled = true
+        cc.changePlaybackPositionCommand.addTarget { [weak self] event in
+            if let e = event as? MPChangePlaybackPositionCommandEvent {
+                let t = e.positionTime
+                self?.executeJS("let v=document.querySelector('video');if(v)v.currentTime=\(t);")
                 return .success
             }
             return .commandFailed
@@ -74,32 +80,35 @@ final class NowPlayingManager: NSObject {
         }
     }
 
-    func updateNowPlaying(title: String, subtitle: String, duration: Double, currentTime: Double, isPlaying: Bool, artworkURL: String? = nil) {
-        var nowPlayingInfo = [String: Any]()
-
-        nowPlayingInfo[MPMediaItemPropertyTitle] = title.isEmpty ? "Netflix" : title
-        nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle.isEmpty ? "Netflix" : subtitle
-        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
-        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
-
-        if let artworkImage = currentArtworkImage {
-            let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in artworkImage }
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+    func updateNowPlaying(title: String, subtitle: String, duration: Double, currentTime: Double, isPlaying: Bool, artworkURL: String?, hasNext: Bool = false) {
+        var info = [String: Any]()
+        info[MPMediaItemPropertyTitle] = title.isEmpty ? "Netflix" : title
+        info[MPMediaItemPropertyArtist] = subtitle.isEmpty ? "Netflix" : subtitle
+        info[MPMediaItemPropertyAlbumTitle] = "Netflix"
+        info[MPMediaItemPropertyMediaType] = MPNowPlayingInfoMediaType.video.rawValue
+        if duration > 0 {
+            info[MPMediaItemPropertyPlaybackDuration] = duration
+            info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
         }
+        info[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
+        if let img = currentArtworkImage ?? NSApp.applicationIconImage {
+            info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: img.size) { _ in img }
+        }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        // Claim active player status so our process wins over WKWebView's WebContent process
+        MPNowPlayingInfoCenter.default().playbackState = isPlaying ? .playing : .paused
 
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        // Dynamically show/hide the ⏭ Next Episode button in Control Center
+        MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled = hasNext
 
-        // Fetch artwork asynchronously if artworkURL changed
-        if let artURLString = artworkURL, !artURLString.isEmpty, artURLString != currentArtworkURL {
-            currentArtworkURL = artURLString
-            fetchArtwork(from: artURLString) { [weak self] image in
+        if let urlStr = artworkURL, !urlStr.isEmpty, urlStr != currentArtworkURL {
+            currentArtworkURL = urlStr
+            fetchArtwork(from: urlStr) { [weak self] image in
                 guard let self = self, let image = image else { return }
                 self.currentArtworkImage = image
-                var updatedInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
-                let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-                updatedInfo[MPMediaItemPropertyArtwork] = artwork
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = updatedInfo
+                var updated = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                updated[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = updated
             }
         }
     }
@@ -111,19 +120,10 @@ final class NowPlayingManager: NSObject {
     }
 
     private func fetchArtwork(from urlString: String, completion: @escaping (NSImage?) -> Void) {
-        guard let url = URL(string: urlString) else {
-            completion(nil)
-            return
-        }
-
+        guard let url = URL(string: urlString) else { completion(nil); return }
         URLSession.shared.dataTask(with: url) { data, _, _ in
-            guard let data = data, let image = NSImage(data: data) else {
-                completion(nil)
-                return
-            }
-            DispatchQueue.main.async {
-                completion(image)
-            }
+            let image = data.flatMap { NSImage(data: $0) }
+            DispatchQueue.main.async { completion(image) }
         }.resume()
     }
 }

@@ -142,7 +142,7 @@ struct SettingsView: View {
                 Text("Streaming Quality")
                     .font(.system(size: 18, weight: .black))
                     .foregroundStyle(.white)
-                Text("Cap your stream resolution to monitor data usage.")
+                Text("Choose a browser profile. Netflix controls actual resolution and data usage.")
                     .font(.system(size: 11))
                     .foregroundStyle(.gray)
             }

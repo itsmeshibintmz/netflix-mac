@@ -6,6 +6,7 @@ import SwiftUI
 @main
 struct NetflixMacApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @ObservedObject private var updateManager = UpdateManager.shared
 
     var body: some Scene {
         WindowGroup {
@@ -22,8 +23,9 @@ struct NetflixMacApp: App {
             // Add Check for Updates option under application info menu
             CommandGroup(after: .appInfo) {
                 Button("Check for Updates...") {
-                    UpdateManager.shared.checkForUpdates(manual: true)
+                    updateManager.checkForUpdates(manual: true)
                 }
+                .disabled(updateManager.isCheckingForUpdates)
             }
         }
 

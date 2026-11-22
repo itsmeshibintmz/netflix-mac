@@ -102,6 +102,14 @@ struct NetflixWebViewContainer: View {
                     updateManager.isUpdateAvailable = false
                 }
             )
+            .alert("Unable to Check for Updates", isPresented: Binding(
+                get: { updateManager.updateError != nil },
+                set: { if !$0 { updateManager.updateError = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(updateManager.updateError ?? "")
+            }
         }
         // Post-Update "What's New" Sheet
         .sheet(isPresented: $updateManager.showWhatsNew) {
@@ -125,6 +133,14 @@ struct NetflixWebViewContainer: View {
             }
         } message: {
             Text("Netflix v\(updateManager.currentVersion) is the latest version available.")
+        }
+        .alert("Unable to Check for Updates", isPresented: Binding(
+            get: { updateManager.updateError != nil },
+            set: { if !$0 { updateManager.updateError = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(updateManager.updateError ?? "")
         }
         // Version History Sheet
         .sheet(isPresented: $updateManager.showVersionHistory) {

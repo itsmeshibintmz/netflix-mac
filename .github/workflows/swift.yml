@@ -1,7 +1,4 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
-name: Swift
+name: Xcode Tests
 
 on:
   push:
@@ -16,7 +13,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: swift build -v
     - name: Run tests
-      run: swift test -v
+      run: xcodebuild -project NetflixMac.xcodeproj -scheme Netflix -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO test
+    - name: Check ad-hoc release signing
+      run: |
+        xcodebuild -project NetflixMac.xcodeproj -scheme Netflix -configuration Release -destination 'platform=macOS' -derivedDataPath "$RUNNER_TEMP/netflix-release" CODE_SIGN_IDENTITY=- CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO DEVELOPMENT_TEAM= build
+        app="$RUNNER_TEMP/netflix-release/Build/Products/Release/Netflix.app"
+        codesign --verify --deep --strict "$app"
+        codesign -d --entitlements :- "$app" > "$RUNNER_TEMP/netflix-entitlements.plist"
+        test "$(/usr/libexec/PlistBuddy -c 'Print :com.apple.security.cs.disable-library-validation' "$RUNNER_TEMP/netflix-entitlements.plist")" = true
+        if /usr/libexec/PlistBuddy -c 'Print :com.apple.security.get-task-allow' "$RUNNER_TEMP/netflix-entitlements.plist" 2>/dev/null | grep -qx true; then
+          echo "Release app must not permit debugger attachment" >&2
+          exit 1
+        fi

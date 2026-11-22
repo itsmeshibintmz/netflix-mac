@@ -16,19 +16,17 @@ enum QualityLevel: String, CaseIterable, Identifiable {
 
     var resolution: String {
         switch self {
-        case .auto: return "Auto"
-        case .low: return "480p SD"
-        case .medium: return "720p HD"
-        case .high: return "1080p/4K UHD"
+        case .auto: return "Netflix-selected"
+        case .low: return "Mobile profile"
+        case .medium: return "Chrome profile"
+        case .high: return "Safari profile"
         }
     }
 
     var dataUsage: String {
         switch self {
-        case .auto: return "Varies with speed"
-        case .low: return "Up to 0.3 GB / hr"
-        case .medium: return "Up to 0.7 GB / hr"
-        case .high: return "Up to 3.0 - 7.0 GB / hr"
+        case .auto: return "Netflix-managed"
+        case .low, .medium, .high: return "Not guaranteed"
         }
     }
 
@@ -44,13 +42,11 @@ enum QualityLevel: String, CaseIterable, Identifiable {
     var userAgent: String {
         switch self {
         case .auto, .high:
-            // Standard macOS Safari 18 - Unlocks native hardware FairPlay DRM (1080p, 4K, HDR)
+            // User-agent profiles are hints; Netflix controls the delivered resolution.
             return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15"
         case .medium:
-            // macOS Chrome - Restricts playback to standard software Widevine DRM (caps at 720p)
             return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         case .low:
-            // iPad Safari - Forces Netflix to deliver mobile HLS streams (caps at 480p / mobile low-bitrate)
             return "Mozilla/5.0 (iPad; CPU OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/605.1.15"
         }
     }

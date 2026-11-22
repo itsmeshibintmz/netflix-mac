@@ -62,3 +62,4 @@ Short overview summary of what this release is about.
 | v1.6.2  | Dual-Mode Version History Sizing & Responsive Modal Fitting 🎨 |
 | v1.7.0  | Native Control Center & Lock Screen Metadata Integration 🎵 |
 | v1.7.1  | Automated In-App Updates & Live Media Metadata Sync 🛠️ |
+| v2.0.0  | Playback and Update Improvements 🚀 |

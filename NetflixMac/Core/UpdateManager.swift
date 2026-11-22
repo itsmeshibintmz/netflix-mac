@@ -5,6 +5,7 @@ import Foundation
 import AppKit
 import Combine
 import Sparkle
+import os
 
 @MainActor
 final class UpdateManager: ObservableObject {
@@ -26,9 +27,13 @@ final class UpdateManager: ObservableObject {
     @Published var isDownloading = false
     @Published var downloadProgress: Double = 0.0
     @Published var isUpToDate = false
+    @Published var isCheckingForUpdates = false
+    @Published var updateError: String?
 
     private var cancellables = Set<AnyCancellable>()
     private let repoPath = "itsmeshibintmz/netflix-mac"
+    private let session: URLSession
+    private let logger = Logger(subsystem: "com.personal.Netflix", category: "Updates")
 
     var currentVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
@@ -39,9 +44,10 @@ final class UpdateManager: ObservableObject {
         set { UserDefaults.standard.set(newValue, forKey: "lastSeenVersion") }
     }
 
-    private init() {
+    init(session: URLSession = .shared, startingUpdater: Bool = true) {
+        self.session = session
         // Initialize Sparkle standard updater controller
-        self.updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        self.updaterController = SPUStandardUpdaterController(startingUpdater: startingUpdater, updaterDelegate: nil, userDriverDelegate: nil)
         
         // Bind Sparkle's canCheckForUpdates state
         self.updaterController.updater.publisher(for: \.canCheckForUpdates)
@@ -50,23 +56,36 @@ final class UpdateManager: ObservableObject {
 
     /// Primary check run on application launch or manually via menu
     func checkForUpdates(manual: Bool = false) {
+        guard !isCheckingForUpdates else { return }
         self.isUpToDate = false
+        self.updateError = nil
+        self.isCheckingForUpdates = true
         queryGitHubReleaseAPI(manual: manual)
     }
 
     private func queryGitHubReleaseAPI(manual: Bool) {
-        guard let url = URL(string: "https://api.github.com/repos/\(repoPath)/releases/latest") else { return }
+        let url = URL(string: "https://api.github.com/repos/\(repoPath)/releases/latest")!
 
         var request = URLRequest(url: url)
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
         request.setValue("NetflixMacWrapper-Updater", forHTTPHeaderField: "User-Agent")
 
-        URLSession.shared.dataTaskPublisher(for: request)
-            .map(\.data)
+        session.dataTaskPublisher(for: request)
+            .tryMap { data, response in
+                guard let response = response as? HTTPURLResponse, (200..<300).contains(response.statusCode) else {
+                    throw URLError(.badServerResponse)
+                }
+                return data
+            }
             .decode(type: GitHubRelease.self, decoder: JSONDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] release in
+            .sink(receiveCompletion: { [weak self] completion in
+                self?.isCheckingForUpdates = false
+                if case .failure(let error) = completion {
+                    self?.reportUpdateError(error.localizedDescription, manual: manual)
+                }
+            }, receiveValue: { [weak self] release in
                 self?.handleLatestRelease(release, manual: manual)
             })
             .store(in: &cancellables)
@@ -80,15 +99,23 @@ final class UpdateManager: ObservableObject {
             cleanedTag = String(cleanedTag.dropFirst(1))
         }
         cleanedTag = cleanedTag.trimmingCharacters(in: CharacterSet(charactersIn: "."))
+        guard !cleanedTag.isEmpty,
+              cleanedTag.split(separator: ".", omittingEmptySubsequences: false).allSatisfy({ !$0.isEmpty && $0.allSatisfy(\.isNumber) }) else {
+            reportUpdateError("The latest release has an invalid version.", manual: manual)
+            return
+        }
         
         let current = currentVersion
 
         if cleanedTag.compare(current, options: .numeric) == .orderedDescending {
-            if let dmgAsset = release.assets.first(where: { $0.name.lowercased().hasSuffix(".dmg") }) {
+            if let dmgAsset = release.assets.first(where: { $0.name.lowercased().hasSuffix(".dmg") }),
+               let url = URL(string: dmgAsset.browserDownloadURL), url.scheme == "https", url.host != nil {
                 self.latestVersion = cleanedTag
-                self.changelog = release.body
-                self.downloadURL = URL(string: dmgAsset.browserDownloadURL)
+                self.changelog = release.body ?? ""
+                self.downloadURL = url
                 self.isUpdateAvailable = true
+            } else {
+                reportUpdateError("The latest release has no valid DMG download.", manual: manual)
             }
         } else {
             if manual {
@@ -112,11 +139,15 @@ final class UpdateManager: ObservableObject {
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
         request.setValue("NetflixMacWrapper-Updater", forHTTPHeaderField: "User-Agent")
 
-        URLSession.shared.dataTaskPublisher(for: request)
+        session.dataTaskPublisher(for: request)
             .map(\.data)
             .decode(type: [GitHubRelease].self, decoder: JSONDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] releases in
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.logger.error("Could not fetch release notes: \(error.localizedDescription, privacy: .public)")
+                }
+            }, receiveValue: { [weak self] releases in
                 if let matchingRelease = releases.first(where: { release in
                     var tag = release.tagName.lowercased()
                     if tag.hasPrefix("v.") {
@@ -127,7 +158,7 @@ final class UpdateManager: ObservableObject {
                     tag = tag.trimmingCharacters(in: CharacterSet(charactersIn: "."))
                     return tag == version
                 }) {
-                    self?.whatsNewChangelog = matchingRelease.body
+                    self?.whatsNewChangelog = matchingRelease.body ?? ""
                     self?.showWhatsNew = true
                     self?.lastSeenVersion = version
                 }
@@ -137,15 +168,26 @@ final class UpdateManager: ObservableObject {
 
     /// Triggers Sparkle's native automatic updater flow
     func downloadAndInstall() {
+        guard canCheckForUpdates else {
+            reportUpdateError("The updater is not ready. Please try again shortly.", manual: true)
+            return
+        }
         isUpdateAvailable = false
         updaterController.checkForUpdates(nil)
+    }
+
+    private func reportUpdateError(_ message: String, manual: Bool) {
+        logger.error("Update check failed: \(message, privacy: .public)")
+        if manual {
+            updateError = message
+        }
     }
 }
 
 // MARK: - Decodable GitHub API models
 private struct GitHubRelease: Decodable {
     let tagName: String
-    let body: String
+    let body: String?
     let assets: [GitHubAsset]
 
     enum CodingKeys: String, CodingKey {
