@@ -75,7 +75,7 @@ The app disables hardened-runtime library validation so an ad-hoc-signed build c
 - [x] Native macOS client
 - [x] Liquid Glass UI
 - [x] Modern navigation
-- [ ] Mini Player
+- [x] Mini Player
 - [x] Global media controls
 - [ ] Picture in Picture
 - [ ] Downloads

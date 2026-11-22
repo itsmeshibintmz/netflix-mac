@@ -1,0 +1,8 @@
+---
+description: Keep release versions and documentation in sync.
+alwaysApply: true
+---
+
+# Release maintenance
+
+For every new release, follow `.agents/AGENTS.md` and review repository-wide version references and release documentation. Update current references and the version history without rewriting historical entries.
