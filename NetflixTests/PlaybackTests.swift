@@ -24,8 +24,8 @@ private final class PlaybackProbe: NSObject, WKNavigationDelegate, WKScriptMessa
 }
 
 @MainActor
-final class MenuBarTests: XCTestCase {
-    func testClosingLastWindowQuitsUnlessMenuBarIsEnabled() {
+final class PlaybackTests: XCTestCase {
+    func testClosingLastWindowQuitsEvenWithLegacyMenuBarSetting() {
         let defaults = UserDefaults.standard
         let key = "keepRunningInMenuBar"
         let original = defaults.object(forKey: key)
@@ -41,7 +41,7 @@ final class MenuBarTests: XCTestCase {
         defaults.removeObject(forKey: key)
         XCTAssertTrue(delegate.applicationShouldTerminateAfterLastWindowClosed(NSApplication.shared))
         defaults.set(true, forKey: key)
-        XCTAssertFalse(delegate.applicationShouldTerminateAfterLastWindowClosed(NSApplication.shared))
+        XCTAssertTrue(delegate.applicationShouldTerminateAfterLastWindowClosed(NSApplication.shared))
         defaults.set(false, forKey: key)
         XCTAssertTrue(delegate.applicationShouldTerminateAfterLastWindowClosed(NSApplication.shared))
     }

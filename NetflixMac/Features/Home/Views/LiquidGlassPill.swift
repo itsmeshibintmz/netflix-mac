@@ -26,6 +26,8 @@ struct LiquidGlassPill: View {
             if isMiniPlayer {
                 Button(action: { nowPlaying.togglePlayPause() }) {
                     Image(systemName: nowPlaying.isPlaying ? "pause.fill" : "play.fill")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(.white.opacity(nowPlaying.title == nil ? 0.2 : 0.75))
                         .frame(width: 32, height: 32)
                 }
                 .buttonStyle(.plain)
@@ -35,6 +37,8 @@ struct LiquidGlassPill: View {
 
                 Button(action: { nowPlaying.toggleMute() }) {
                     Image(systemName: nowPlaying.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(.white.opacity(nowPlaying.title == nil ? 0.2 : 0.75))
                         .frame(width: 32, height: 32)
                 }
                 .buttonStyle(.plain)
@@ -46,7 +50,9 @@ struct LiquidGlassPill: View {
             }
 
             Button(action: miniPlayerAction) {
-                Image(systemName: isMiniPlayer ? "macwindow" : "rectangle.inset.bottomright")
+                Image(systemName: isMiniPlayer ? "pip.exit" : "pip.enter")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(.white.opacity(canToggleMiniPlayer ? 0.75 : 0.2))
                     .frame(width: 32, height: 32)
             }
             .buttonStyle(.plain)

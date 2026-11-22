@@ -10,7 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        !UserDefaults.standard.bool(forKey: "keepRunningInMenuBar")
+        true
     }
 
     private func setupAppearance() {
