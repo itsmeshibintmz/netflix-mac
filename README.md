@@ -80,6 +80,7 @@ The app disables hardened-runtime library validation so an ad-hoc-signed build c
 - [x] Mini Player
 - [x] Global media controls
 - [x] Sleep Timer
+- [x] Single Control Center Now Playing session
 - [ ] Picture in Picture
 - [ ] Downloads
 - [ ] Spotlight integration

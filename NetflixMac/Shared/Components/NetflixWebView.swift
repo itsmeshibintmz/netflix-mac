@@ -306,7 +306,7 @@ struct NetflixWebView: NSViewRepresentable {
                     }
                 } catch(e) {}
 
-                // Keep WebKit and the native Now Playing center in sync.
+                // WebKit owns the single macOS Now Playing session.
                 if (navigator.mediaSession) {
                     navigator.mediaSession.playbackState = video.paused ? "paused" : "playing";
                     navigator.mediaSession.metadata = new MediaMetadata({
@@ -315,6 +315,16 @@ struct NetflixWebView: NSViewRepresentable {
                         album: "Netflix",
                         artwork: artwork
                     });
+                    try {
+                        if (Number.isFinite(video.duration) && video.duration > 0 &&
+                            Number.isFinite(video.currentTime) && video.currentTime >= 0) {
+                            navigator.mediaSession.setPositionState({
+                                duration: video.duration,
+                                playbackRate: video.playbackRate || 1,
+                                position: Math.min(video.currentTime, video.duration)
+                            });
+                        }
+                    } catch(e) {}
                 }
 
                 if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.netflixMac) {
@@ -330,6 +340,12 @@ struct NetflixWebView: NSViewRepresentable {
                         hasNext: hasNext
                     });
                 }
+            }
+
+            function clearMediaSession() {
+                if (!navigator.mediaSession) return;
+                navigator.mediaSession.playbackState = "none";
+                navigator.mediaSession.metadata = null;
             }
 
 
@@ -367,6 +383,7 @@ struct NetflixWebView: NSViewRepresentable {
                     if (video !== null && window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.netflixMac) {
                         window.webkit.messageHandlers.netflixMac.postMessage({ action: "clearNowPlaying" });
                     }
+                    clearMediaSession();
                     video = null;
                     return;
                 }
@@ -419,6 +436,7 @@ struct NetflixWebView: NSViewRepresentable {
                     if (video !== null && window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.netflixMac) {
                         window.webkit.messageHandlers.netflixMac.postMessage({ action: "clearNowPlaying" });
                     }
+                    clearMediaSession();
                     video = null;
                 }
             }, 1000);
@@ -612,20 +630,12 @@ struct NetflixWebView: NSViewRepresentable {
             DispatchQueue.main.async {
                 if action == "updateNowPlaying" {
                     let title = body["title"] as? String ?? ""
-                    let subtitle = body["subtitle"] as? String ?? ""
-                    let duration = body["duration"] as? Double ?? 0
-                    let currentTime = body["currentTime"] as? Double ?? 0
                     let isPlaying = body["isPlaying"] as? Bool ?? false
                     if let isMuted = body["isMuted"] as? Bool {
                         NowPlayingManager.shared.updateMutedState(isMuted)
                     }
-                    let artworkURL = body["artworkURL"] as? String
-                    let hasNext = body["hasNext"] as? Bool ?? false
                     NowPlayingManager.shared.updateNowPlaying(
-                        title: title, subtitle: subtitle,
-                        duration: duration, currentTime: currentTime,
-                        isPlaying: isPlaying, artworkURL: artworkURL,
-                        hasNext: hasNext
+                        title: title, isPlaying: isPlaying
                     )
                     return
                 } else if action == "clearNowPlaying" {

@@ -166,28 +166,30 @@ final class PlaybackTests: XCTestCase {
         XCTAssertTrue(delegate.applicationShouldTerminateAfterLastWindowClosed(NSApplication.shared))
     }
 
-    func testNowPlayingStateTracksPlaybackAndClears() {
+    func testNowPlayingStateUsesWebKitInsteadOfNativeCenter() {
         _ = NSApplication.shared
         let manager = NowPlayingManager.shared
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        MPNowPlayingInfoCenter.default().playbackState = .stopped
         defer { manager.clearNowPlaying() }
 
-        manager.updateNowPlaying(title: "", subtitle: "", duration: 0, currentTime: 0, isPlaying: true, artworkURL: nil)
+        manager.updateNowPlaying(title: "", isPlaying: true)
         XCTAssertEqual(manager.title, "Netflix")
         XCTAssertTrue(manager.isPlaying)
-        XCTAssertEqual(MPNowPlayingInfoCenter.default().playbackState, .playing)
+        XCTAssertNil(MPNowPlayingInfoCenter.default().nowPlayingInfo)
+        XCTAssertEqual(MPNowPlayingInfoCenter.default().playbackState, .stopped)
 
-        manager.updateNowPlaying(title: "Example", subtitle: "", duration: 100, currentTime: 10, isPlaying: false, artworkURL: nil, hasNext: true)
+        manager.updateNowPlaying(title: "Example", isPlaying: false)
         XCTAssertEqual(manager.title, "Example")
         XCTAssertFalse(manager.isPlaying)
-        XCTAssertEqual(MPNowPlayingInfoCenter.default().playbackState, .paused)
-        XCTAssertTrue(MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled)
+        XCTAssertNil(MPNowPlayingInfoCenter.default().nowPlayingInfo)
+        XCTAssertEqual(MPNowPlayingInfoCenter.default().playbackState, .stopped)
 
         manager.clearNowPlaying()
         XCTAssertNil(manager.title)
         XCTAssertFalse(manager.isPlaying)
         XCTAssertNil(MPNowPlayingInfoCenter.default().nowPlayingInfo)
         XCTAssertEqual(MPNowPlayingInfoCenter.default().playbackState, .stopped)
-        XCTAssertFalse(MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled)
     }
 
     func testPlayPauseControlsWebViewPlayer() {
@@ -255,6 +257,21 @@ final class PlaybackTests: XCTestCase {
         wait(for: [ready], timeout: 10)
         XCTAssertFalse(manager.isMuted)
 
+        let mediaSessionReady = expectation(description: "WebKit media session is populated")
+        webView.evaluateJavaScript("""
+            ({
+                title: navigator.mediaSession.metadata && navigator.mediaSession.metadata.title,
+                playbackState: navigator.mediaSession.playbackState
+            })
+            """) { result, error in
+                XCTAssertNil(error)
+                let state = result as? [String: Any]
+                XCTAssertEqual(state?["title"] as? String, "Example")
+                XCTAssertEqual(state?["playbackState"] as? String, "paused")
+                mediaSessionReady.fulfill()
+            }
+        wait(for: [mediaSessionReady], timeout: 10)
+
         let muted = expectation(description: "mute reflected in app state")
         let mutedSubscription = manager.$isMuted.dropFirst().first(where: { $0 }).sink { _ in muted.fulfill() }
         manager.toggleMute()
@@ -287,7 +304,7 @@ final class PlaybackTests: XCTestCase {
         let other = WKWebView()
         let manager = NowPlayingManager.shared
         manager.webView = active
-        manager.updateNowPlaying(title: "Example", subtitle: "", duration: 0, currentTime: 0, isPlaying: true, artworkURL: nil)
+        manager.updateNowPlaying(title: "Example", isPlaying: true)
         defer {
             manager.webView = nil
             manager.clearNowPlaying()
@@ -315,7 +332,7 @@ final class PlaybackTests: XCTestCase {
         let webView = WKWebView()
         let manager = NowPlayingManager.shared
         manager.webView = webView
-        manager.updateNowPlaying(title: "Example", subtitle: "", duration: 0, currentTime: 0, isPlaying: true, artworkURL: nil)
+        manager.updateNowPlaying(title: "Example", isPlaying: true)
         defer {
             manager.webView = nil
             manager.clearNowPlaying()
