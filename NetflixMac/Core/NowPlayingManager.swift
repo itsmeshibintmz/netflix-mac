@@ -101,6 +101,36 @@ final class NowPlayingManager: NSObject, ObservableObject {
         }
     }
 
+    func pausePlayback(completion: @escaping (Error?) -> Void) {
+        guard let webView else {
+            let error = NSError(domain: "NetflixPlayback", code: 1,
+                                userInfo: [NSLocalizedDescriptionKey: "No Netflix player is available."])
+            logger.error("Playback command failed: no web view is available")
+            completion(error)
+            return
+        }
+        webView.evaluateJavaScript("""
+            (() => {
+                const video = document.querySelector('video');
+                if (!video) return false;
+                video.pause();
+                return true;
+            })();
+            """) { result, error in
+            if let error {
+                self.logger.error("Playback command failed: \(error.localizedDescription, privacy: .private)")
+                completion(error)
+            } else if (result as? Bool) == true {
+                completion(nil)
+            } else {
+                let error = NSError(domain: "NetflixPlayback", code: 2,
+                                    userInfo: [NSLocalizedDescriptionKey: "No Netflix video is available."])
+                self.logger.error("Playback command failed: no video is available")
+                completion(error)
+            }
+        }
+    }
+
     func toggleMute() {
         executeJS("""
             (() => {

@@ -25,6 +25,126 @@ private final class PlaybackProbe: NSObject, WKNavigationDelegate, WKScriptMessa
 
 @MainActor
 final class PlaybackTests: XCTestCase {
+    func testSleepTimerReplacesCancelsAndPausesOnceAfterWake() {
+        var current = Date(timeIntervalSinceReferenceDate: 1000)
+        var pauseCount = 0
+        let controller = SleepTimerController(pause: { completion in
+            pauseCount += 1
+            completion(nil)
+        }, now: { current })
+        let wake = { NSWorkspace.shared.notificationCenter.post(name: NSWorkspace.didWakeNotification, object: nil) }
+
+        controller.start(minutes: 15)
+        XCTAssertEqual(controller.deadline, current.addingTimeInterval(900))
+        controller.start(minutes: 30)
+        XCTAssertEqual(controller.deadline, current.addingTimeInterval(1800))
+        current.addTimeInterval(900)
+        wake()
+        XCTAssertEqual(pauseCount, 0)
+        controller.cancel()
+        current.addTimeInterval(901)
+        wake()
+        XCTAssertEqual(pauseCount, 0)
+        XCTAssertNil(controller.deadline)
+
+        controller.start(minutes: 15)
+        current.addTimeInterval(900)
+        wake()
+        wake()
+        XCTAssertEqual(pauseCount, 1)
+        XCTAssertNil(controller.deadline)
+    }
+
+    func testSleepTimerFiresOnRunLoopAndReportsPauseFailure() {
+        var current = Date(timeIntervalSinceReferenceDate: 1000)
+        var reads = 0
+        let expired = expectation(description: "timer fires")
+        let controller = SleepTimerController(pause: { completion in
+            completion(NSError(domain: "test", code: 1,
+                               userInfo: [NSLocalizedDescriptionKey: "Player unavailable"]))
+            expired.fulfill()
+        }, now: {
+            reads += 1
+            if reads == 2 { current.addTimeInterval(59.9) }
+            if reads >= 3 { current.addTimeInterval(1) }
+            return current
+        })
+        controller.start(minutes: 1)
+        wait(for: [expired], timeout: 2)
+        XCTAssertNil(controller.deadline)
+        XCTAssertTrue(controller.errorMessage?.contains("Player unavailable") == true)
+    }
+
+    func testSleepTimerPausesPlayerWithoutResumingIt() {
+        _ = NSApplication.shared
+        let probe = PlaybackProbe()
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController.add(probe, name: "playbackTest")
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.navigationDelegate = probe
+        let manager = NowPlayingManager.shared
+        manager.webView = webView
+        defer {
+            manager.webView = nil
+            configuration.userContentController.removeScriptMessageHandler(forName: "playbackTest")
+        }
+
+        probe.loaded = expectation(description: "player fixture loaded")
+        webView.loadHTMLString("""
+            <script>
+            const player = {
+                paused: false,
+                play() { window.webkit.messageHandlers.playbackTest.postMessage('played'); },
+                pause() { this.paused = true; window.webkit.messageHandlers.playbackTest.postMessage('paused'); }
+            };
+            const querySelector = document.querySelector.bind(document);
+            document.querySelector = selector => selector === 'video' ? player : querySelector(selector);
+            </script>
+            """, baseURL: nil)
+        wait(for: [probe.loaded!], timeout: 10)
+
+        var current = Date(timeIntervalSinceReferenceDate: 1000)
+        var completed: XCTestExpectation?
+        let controller = SleepTimerController(pause: { completion in
+            manager.pausePlayback { error in
+                XCTAssertNil(error)
+                completion(error)
+                completed?.fulfill()
+            }
+        }, now: { current })
+        for _ in 0..<2 {
+            probe.paused = expectation(description: "player paused")
+            completed = expectation(description: "pause completed")
+            controller.start(minutes: 15)
+            current.addTimeInterval(900)
+            NSWorkspace.shared.notificationCenter.post(name: NSWorkspace.didWakeNotification, object: nil)
+            wait(for: [probe.paused!, completed!], timeout: 10)
+        }
+    }
+
+    func testSleepTimerPauseReportsMissingPlayer() {
+        let manager = NowPlayingManager.shared
+        manager.webView = nil
+        var receivedError: Error?
+        manager.pausePlayback { receivedError = $0 }
+        XCTAssertNotNil(receivedError)
+
+        let probe = PlaybackProbe()
+        let webView = WKWebView()
+        webView.navigationDelegate = probe
+        manager.webView = webView
+        defer { manager.webView = nil }
+        probe.loaded = expectation(description: "page loaded without video")
+        webView.loadHTMLString("<p>No video</p>", baseURL: nil)
+        wait(for: [probe.loaded!], timeout: 10)
+        let completed = expectation(description: "missing video reported")
+        manager.pausePlayback { error in
+            XCTAssertEqual(error?.localizedDescription, "No Netflix video is available.")
+            completed.fulfill()
+        }
+        wait(for: [completed], timeout: 10)
+    }
+
     func testClosingLastWindowQuitsEvenWithLegacyMenuBarSetting() {
         let defaults = UserDefaults.standard
         let key = "keepRunningInMenuBar"

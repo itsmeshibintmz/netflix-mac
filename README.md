@@ -28,6 +28,7 @@ A beautiful, fast, and modern macOS client built with SwiftUI and Apple's latest
 - 📺 Responsive layouts
 - 🔄 Frequent updates
 - 🪟 Compact, always-on-top mini player window
+- ⏲️ Sleep timer to pause playback automatically
 
 More features coming soon.
 
@@ -53,6 +54,8 @@ Use the mini player button in the floating navigation dock or **Playback → Ent
 
 Mute or unmute using Netflix's **M** key or the mini-player speaker button. These controls affect Netflix playback, not the Mac's system volume.
 
+Choose **Playback → Sleep Timer** and a duration to pause Netflix automatically. Select another duration to replace the timer, or choose **Cancel Sleep Timer** to cancel it. The menu shows when playback will pause. The timer only runs while the app is open; if the Mac sleeps past the deadline, playback is paused after it wakes.
+
 ## Maintainer Release Build
 
 `build_dmg.sh` builds an ad-hoc-signed, **not notarized** DMG; no paid Apple Developer account is required. Install Xcode 26 or later (for the Icon Composer app icon) and `create-dmg`, then configure:
@@ -76,6 +79,7 @@ The app disables hardened-runtime library validation so an ad-hoc-signed build c
 - [x] Modern navigation
 - [x] Mini Player
 - [x] Global media controls
+- [x] Sleep Timer
 - [ ] Picture in Picture
 - [ ] Downloads
 - [ ] Spotlight integration

@@ -74,3 +74,4 @@ Short overview summary of what this release is about.
 | v2.3.1  | Mini Player Shortcut and Mute Controls 🛠️ |
 | v2.3.2  | Mini Player and Mute Controls Re-release 🛠️ |
 | v2.3.3  | Dock Cleanup and Menu Bar Removal 🛠️ |
+| v2.4.0  | Sleep Timer ⏲️ |
