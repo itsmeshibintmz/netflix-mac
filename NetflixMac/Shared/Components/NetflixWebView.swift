@@ -553,6 +553,10 @@ struct NetflixWebView: NSViewRepresentable {
 
     static func dismantleNSView(_ nsView: WKWebView, coordinator: WebViewCoordinator) {
         nsView.configuration.userContentController.removeScriptMessageHandler(forName: "netflixMac")
+        if NowPlayingManager.shared.webView === nsView {
+            NowPlayingManager.shared.clearNowPlaying()
+            NowPlayingManager.shared.webView = nil
+        }
     }
 
     // MARK: - WKWebView Coordinator
@@ -644,6 +648,9 @@ struct NetflixWebView: NSViewRepresentable {
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
             DispatchQueue.main.async {
+                if NowPlayingManager.shared.webView === webView {
+                    NowPlayingManager.shared.clearNowPlaying()
+                }
                 self.parent.isLoading = true
             }
         }

@@ -6,12 +6,18 @@ import Foundation
 import MediaPlayer
 import AppKit
 import WebKit
+import Combine
+import OSLog
 
-final class NowPlayingManager: NSObject {
+final class NowPlayingManager: NSObject, ObservableObject {
     static let shared = NowPlayingManager()
+
+    @Published private(set) var title: String?
+    @Published private(set) var isPlaying = false
 
     private var currentArtworkURL: String = ""
     private var currentArtworkImage: NSImage? = nil
+    private let logger = Logger(subsystem: "com.personal.Netflix", category: "Playback")
 
     weak var webView: WKWebView?
 
@@ -37,7 +43,7 @@ final class NowPlayingManager: NSObject {
 
         cc.togglePlayPauseCommand.isEnabled = true
         cc.togglePlayPauseCommand.addTarget { [weak self] _ in
-            self?.executeJS("let v=document.querySelector('video');if(v){v.paused?v.play():v.pause();}")
+            self?.togglePlayPause()
             return .success
         }
 
@@ -74,13 +80,44 @@ final class NowPlayingManager: NSObject {
         }
     }
 
+    func togglePlayPause() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            guard let webView = self.webView else {
+                self.logger.error("Playback command failed: no web view is available")
+                return
+            }
+            webView.callAsyncJavaScript("""
+                const video = document.querySelector('video');
+                if (!video) throw new Error('No video is available');
+                if (video.paused) await video.play();
+                else video.pause();
+                """, arguments: [:], in: nil, in: .page) { result in
+                    if case .failure(let error) = result {
+                        self.logger.error("Playback command failed: \(error.localizedDescription, privacy: .private)")
+                    }
+                }
+        }
+    }
+
     private func executeJS(_ code: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.webView?.evaluateJavaScript(code, completionHandler: nil)
+            guard let self else { return }
+            guard let webView = self.webView else {
+                self.logger.error("Playback command failed: no web view is available")
+                return
+            }
+            webView.evaluateJavaScript(code) { _, error in
+                if let error {
+                    self.logger.error("Playback command failed: \(error.localizedDescription, privacy: .private)")
+                }
+            }
         }
     }
 
     func updateNowPlaying(title: String, subtitle: String, duration: Double, currentTime: Double, isPlaying: Bool, artworkURL: String?, hasNext: Bool = false) {
+        self.title = title.isEmpty ? "Netflix" : title
+        self.isPlaying = isPlaying
         var info = [String: Any]()
         info[MPMediaItemPropertyTitle] = title.isEmpty ? "Netflix" : title
         info[MPMediaItemPropertyArtist] = subtitle.isEmpty ? "Netflix" : subtitle
@@ -104,7 +141,7 @@ final class NowPlayingManager: NSObject {
         if let urlStr = artworkURL, !urlStr.isEmpty, urlStr != currentArtworkURL {
             currentArtworkURL = urlStr
             fetchArtwork(from: urlStr) { [weak self] image in
-                guard let self = self, let image = image else { return }
+                guard let self = self, self.currentArtworkURL == urlStr, let image = image else { return }
                 self.currentArtworkImage = image
                 var updated = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
                 updated[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
@@ -114,7 +151,10 @@ final class NowPlayingManager: NSObject {
     }
 
     func clearNowPlaying() {
+        title = nil
+        isPlaying = false
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled = false
         currentArtworkImage = nil
         currentArtworkURL = ""
     }

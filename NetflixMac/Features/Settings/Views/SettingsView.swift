@@ -8,12 +8,14 @@ struct SettingsView: View {
     @AppStorage("autoPlayNext") private var autoPlayNext = true
     @AppStorage("pureOledBlack") private var pureOledBlack = false
     @AppStorage("streamingQuality") private var streamingQuality = "Auto"
+    @AppStorage("keepRunningInMenuBar") private var keepRunningInMenuBar = false
 
     @State private var activeTab: SettingsTab = .general
 
     enum SettingsTab: String, CaseIterable, Identifiable {
         case general = "General"
         case quality = "Quality"
+        case menuBar = "Menu Bar"
         
         var id: String { rawValue }
         
@@ -21,6 +23,7 @@ struct SettingsView: View {
             switch self {
             case .general: return "gearshape.fill"
             case .quality: return "video.fill"
+            case .menuBar: return "menubar.rectangle"
             }
         }
     }
@@ -75,6 +78,8 @@ struct SettingsView: View {
                     generalPane
                 case .quality:
                     qualityPane
+                case .menuBar:
+                    menuBarPane
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -131,6 +136,39 @@ struct SettingsView: View {
                     .stroke(Color.white.opacity(0.05), lineWidth: 1)
             )
 
+            Spacer()
+        }
+        .padding(20)
+    }
+
+    private var menuBarPane: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Menu Bar Controls")
+                    .font(.system(size: 18, weight: .black))
+                    .foregroundStyle(.white)
+                Text("Control playback and reopen Netflix from the menu bar.")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.gray)
+            }
+
+            generalToggleRow(
+                isOn: $keepRunningInMenuBar,
+                title: "Keep Netflix in the Menu Bar",
+                description: "Keep the app running after its window is closed.",
+                icon: "menubar.rectangle"
+            )
+            .padding(14)
+            .background(Color.white.opacity(0.02))
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.white.opacity(0.05), lineWidth: 1)
+            )
+
+            Text("Hide Netflix to keep playback running. Closing its window stops playback.")
+                .font(.system(size: 11))
+                .foregroundStyle(.gray)
             Spacer()
         }
         .padding(20)

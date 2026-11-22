@@ -27,6 +27,11 @@
 		AB0000000000000000000003 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A1 /* UpdateManager.swift */; };
 		AB0000000000000000000004 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = AB0000000000000000000005 /* Sparkle */; };
 		AB000000000000000000000E /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AB000000000000000000000F /* AppIcon.icon */; };
+		AB0000000000000000000010 /* MenuBarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000011 /* MenuBarTests.swift */; };
+		AB0000000000000000000012 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000002 /* AppDelegate.swift */; };
+		AB0000000000000000000013 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000B2 /* NowPlayingManager.swift */; };
+		AB0000000000000000000014 /* NetflixWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000028 /* NetflixWebView.swift */; };
+		AB0000000000000000000015 /* QualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000B1 /* QualityLevel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +55,7 @@
 		AB0000000000000000000002 /* UpdateManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManagerTests.swift; sourceTree = "<group>"; };
 		AB0000000000000000000006 /* NetflixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetflixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB000000000000000000000F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		AB0000000000000000000011 /* MenuBarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,7 +118,10 @@
 		};
 		AB0000000000000000000008 /* NetflixTests */ = {
 			isa = PBXGroup;
-			children = (AB0000000000000000000002 /* UpdateManagerTests.swift */,);
+			children = (
+				AB0000000000000000000002 /* UpdateManagerTests.swift */,
+				AB0000000000000000000011 /* MenuBarTests.swift */,
+			);
 			path = NetflixTests;
 			sourceTree = "<group>";
 		};
@@ -320,6 +329,11 @@
 			files = (
 				AB0000000000000000000001 /* UpdateManagerTests.swift in Sources */,
 				AB0000000000000000000003 /* UpdateManager.swift in Sources */,
+				AB0000000000000000000010 /* MenuBarTests.swift in Sources */,
+				AB0000000000000000000012 /* AppDelegate.swift in Sources */,
+				AB0000000000000000000013 /* NowPlayingManager.swift in Sources */,
+				AB0000000000000000000014 /* NetflixWebView.swift in Sources */,
+				AB0000000000000000000015 /* QualityLevel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,7 +471,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -484,7 +498,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

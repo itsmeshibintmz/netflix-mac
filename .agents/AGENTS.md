@@ -64,3 +64,4 @@ Short overview summary of what this release is about.
 | v1.7.1  | Automated In-App Updates & Live Media Metadata Sync 🛠️ |
 | v2.0.0  | Playback and Update Improvements 🚀 |
 | v2.1.0  | Adaptive Netflix App Icon 🎨 |
+| v2.2.0  | Menu Bar Controls 🎛️ |

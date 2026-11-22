@@ -27,6 +27,7 @@ A beautiful, fast, and modern macOS client built with SwiftUI and Apple's latest
 - 🎬 Smooth video playback
 - 📺 Responsive layouts
 - 🔄 Frequent updates
+- 🎛️ Optional menu bar playback controls
 
 More features coming soon.
 
@@ -47,6 +48,8 @@ Requires macOS 15 or later.
 Download the latest release from the Releases page.
 
 Drag the app into Applications and launch.
+
+To enable menu bar controls, open Settings with ⌘, and turn on **Menu Bar → Keep Netflix in the Menu Bar**. Hide the app to keep playback running; closing the window stops playback but keeps the app available in the menu bar.
 
 ## Maintainer Release Build
 
@@ -69,11 +72,11 @@ The app disables hardened-runtime library validation so an ad-hoc-signed build c
 - [x] Native macOS client
 - [x] Liquid Glass UI
 - [x] Modern navigation
-- [x] Mini Player
+- [ ] Mini Player
 - [x] Global media controls
 - [ ] Picture in Picture
 - [ ] Downloads
-- [ ] Menu Bar controls
+- [x] Menu Bar controls
 - [ ] Spotlight integration
 - [ ] Apple Shortcuts
 - [ ] Handoff support

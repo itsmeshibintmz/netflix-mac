@@ -10,8 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        // Close app when window is closed for standard desktop app behavior
-        true
+        !UserDefaults.standard.bool(forKey: "keepRunningInMenuBar")
     }
 
     private func setupAppearance() {
