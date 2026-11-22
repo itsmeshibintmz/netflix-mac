@@ -54,15 +54,19 @@ final class MenuBarTests: XCTestCase {
         manager.updateNowPlaying(title: "", subtitle: "", duration: 0, currentTime: 0, isPlaying: true, artworkURL: nil)
         XCTAssertEqual(manager.title, "Netflix")
         XCTAssertTrue(manager.isPlaying)
+        XCTAssertEqual(MPNowPlayingInfoCenter.default().playbackState, .playing)
 
         manager.updateNowPlaying(title: "Example", subtitle: "", duration: 100, currentTime: 10, isPlaying: false, artworkURL: nil, hasNext: true)
         XCTAssertEqual(manager.title, "Example")
         XCTAssertFalse(manager.isPlaying)
+        XCTAssertEqual(MPNowPlayingInfoCenter.default().playbackState, .paused)
         XCTAssertTrue(MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled)
 
         manager.clearNowPlaying()
         XCTAssertNil(manager.title)
         XCTAssertFalse(manager.isPlaying)
+        XCTAssertNil(MPNowPlayingInfoCenter.default().nowPlayingInfo)
+        XCTAssertEqual(MPNowPlayingInfoCenter.default().playbackState, .stopped)
         XCTAssertFalse(MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled)
     }
 

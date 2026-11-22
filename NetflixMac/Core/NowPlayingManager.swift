@@ -1,6 +1,6 @@
 // MARK: - NowPlayingManager.swift
 // Drives macOS Control Center & Lock Screen Now Playing metadata via MPNowPlayingInfoCenter.
-// navigator.mediaSession in WKWebView does NOT bridge to the system - this native class does.
+// The web view also provides Media Session metadata and controls.
 
 import Foundation
 import MediaPlayer
@@ -154,6 +154,7 @@ final class NowPlayingManager: NSObject, ObservableObject {
         title = nil
         isPlaying = false
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        MPNowPlayingInfoCenter.default().playbackState = .stopped
         MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled = false
         currentArtworkImage = nil
         currentArtworkURL = ""

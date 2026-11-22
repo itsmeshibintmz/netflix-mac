@@ -65,3 +65,4 @@ Short overview summary of what this release is about.
 | v2.0.0  | Playback and Update Improvements 🚀 |
 | v2.1.0  | Adaptive Netflix App Icon 🎨 |
 | v2.2.0  | Menu Bar Controls 🎛️ |
+| v2.2.1  | Now Playing Cleanup 🛠️ |
