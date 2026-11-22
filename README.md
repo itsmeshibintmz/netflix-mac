@@ -50,7 +50,7 @@ Drag the app into Applications and launch.
 
 ## Maintainer Release Build
 
-`build_dmg.sh` builds an ad-hoc-signed, **not notarized** DMG; no paid Apple Developer account is required. Install Xcode and `create-dmg`, then configure:
+`build_dmg.sh` builds an ad-hoc-signed, **not notarized** DMG; no paid Apple Developer account is required. Install Xcode 26 or later (for the Icon Composer app icon) and `create-dmg`, then configure:
 
 - `SPARKLE_SIGN_UPDATE`: path to Sparkle's `sign_update` executable
 - `SPARKLE_PRIVATE_KEY_FILE` (optional): private EdDSA key file; otherwise `sign_update` uses the Keychain

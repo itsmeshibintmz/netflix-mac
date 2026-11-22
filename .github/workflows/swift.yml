@@ -26,3 +26,17 @@ jobs:
           echo "Release app must not permit debugger attachment" >&2
           exit 1
         fi
+    - name: Check app icon appearances
+      run: |
+        app="$RUNNER_TEMP/netflix-release/Build/Products/Release/Netflix.app"
+        test -s "$app/Contents/Resources/AppIcon.icns"
+        assetutil --info "$app/Contents/Resources/Assets.car" | python3 -c '
+        import json, sys
+        assets = json.load(sys.stdin)
+        appearances = {item.get("Appearance") for item in assets if item.get("Name") == "AppIcon" and item.get("AssetType") == "IconImageStack"}
+        required = {"NSAppearanceNameAqua", "NSAppearanceNameDarkAqua", "ISAppearanceTintable"}
+        missing = required - appearances
+        if missing:
+            sys.exit("Missing app icon appearances: " + ", ".join(sorted(missing)))
+        print("Light, dark and tintable app icon stacks found")
+        '

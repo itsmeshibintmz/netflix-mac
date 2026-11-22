@@ -26,6 +26,7 @@
 		AB0000000000000000000001 /* UpdateManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000002 /* UpdateManagerTests.swift */; };
 		AB0000000000000000000003 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A1 /* UpdateManager.swift */; };
 		AB0000000000000000000004 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = AB0000000000000000000005 /* Sparkle */; };
+		AB000000000000000000000E /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AB000000000000000000000F /* AppIcon.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		CC000000000000001 /* Netflix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Netflix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB0000000000000000000002 /* UpdateManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManagerTests.swift; sourceTree = "<group>"; };
 		AB0000000000000000000006 /* NetflixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetflixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB000000000000000000000F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				AF01000000000025 /* Assets.xcassets */,
+				AB000000000000000000000F /* AppIcon.icon */,
 				AF01000000000026 /* Info.plist */,
 			);
 			path = Resources;
@@ -284,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA01000000000025 /* Assets.xcassets in Resources */,
+				AB000000000000000000000E /* AppIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,7 +457,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -480,7 +484,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
