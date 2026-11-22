@@ -9,6 +9,7 @@ struct NetflixMacApp: App {
     @ObservedObject private var updateManager = UpdateManager.shared
     @StateObject private var miniPlayer = MiniPlayerController()
     @StateObject private var sleepTimer = SleepTimerController(pause: NowPlayingManager.shared.pausePlayback)
+    @State private var isCustomSleepTimerPresented = false
 
     var body: some Scene {
         Window("Netflix", id: "main") {
@@ -22,6 +23,9 @@ struct NetflixMacApp: App {
                     Button("OK", role: .cancel) {}
                 } message: {
                     Text(sleepTimer.errorMessage ?? "")
+                }
+                .sheet(isPresented: $isCustomSleepTimerPresented) {
+                    CustomSleepTimerView(controller: sleepTimer)
                 }
         }
         .windowStyle(.hiddenTitleBar)
@@ -58,6 +62,10 @@ struct NetflixMacApp: App {
                             sleepTimer.start(minutes: minutes)
                         }
                     }
+                    Divider()
+                    Button("Custom...") {
+                        isCustomSleepTimerPresented = true
+                    }
                 }
             }
         }
@@ -68,5 +76,63 @@ struct NetflixMacApp: App {
                 .preferredColorScheme(.dark)
         }
 
+    }
+}
+
+private struct CustomSleepTimerView: View {
+    @ObservedObject var controller: SleepTimerController
+    @Environment(\.dismiss) private var dismiss
+    @State private var minutes = ""
+
+    private var parsedMinutes: Int? {
+        SleepTimerController.customMinutes(from: minutes)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Custom Sleep Timer")
+                    .font(.title2.bold())
+                Text("Netflix will pause automatically after this duration.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            HStack {
+                TextField("Minutes", text: $minutes)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 100)
+                    .onSubmit(startTimer)
+                Text("minutes")
+                    .foregroundStyle(.secondary)
+            }
+
+            Text("Enter 1 to \(SleepTimerController.customDurationRange.upperBound) minutes.")
+                .font(.caption)
+                .foregroundStyle(parsedMinutes == nil && !minutes.isEmpty ? Color.red : Color.secondary)
+
+            HStack {
+                Button("Cancel", role: .cancel) {
+                    dismiss()
+                }
+                Spacer()
+                Button("Start Timer") {
+                    startTimer()
+                }
+                .keyboardShortcut(.defaultAction)
+                .disabled(parsedMinutes == nil)
+            }
+        }
+        .padding(24)
+        .frame(width: 340)
+        .onAppear {
+            minutes = ""
+        }
+    }
+
+    private func startTimer() {
+        if controller.start(customMinutes: minutes) {
+            dismiss()
+        }
     }
 }

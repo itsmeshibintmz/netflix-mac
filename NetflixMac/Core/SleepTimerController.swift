@@ -3,6 +3,8 @@ import Combine
 
 @MainActor
 final class SleepTimerController: ObservableObject {
+    static let customDurationRange = 1...720
+
     @Published private(set) var deadline: Date?
     @Published var errorMessage: String?
 
@@ -39,6 +41,21 @@ final class SleepTimerController: ObservableObject {
         errorMessage = nil
         deadline = now().addingTimeInterval(TimeInterval(minutes) * 60)
         scheduleTimer()
+    }
+
+    @discardableResult
+    func start(customMinutes value: String) -> Bool {
+        guard let minutes = Self.customMinutes(from: value) else { return false }
+        start(minutes: minutes)
+        return true
+    }
+
+    static func customMinutes(from value: String) -> Int? {
+        guard let minutes = Int(value.trimmingCharacters(in: .whitespacesAndNewlines)),
+              customDurationRange.contains(minutes) else {
+            return nil
+        }
+        return minutes
     }
 
     func cancel() {

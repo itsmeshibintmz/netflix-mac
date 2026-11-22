@@ -25,6 +25,25 @@ private final class PlaybackProbe: NSObject, WKNavigationDelegate, WKScriptMessa
 
 @MainActor
 final class PlaybackTests: XCTestCase {
+    func testCustomSleepTimerValidatesDurationBoundaries() {
+        var current = Date(timeIntervalSinceReferenceDate: 1000)
+        let controller = SleepTimerController(pause: { completion in
+            completion(nil)
+        }, now: { current })
+
+        XCTAssertNil(SleepTimerController.customMinutes(from: ""))
+        XCTAssertNil(SleepTimerController.customMinutes(from: "0"))
+        XCTAssertNil(SleepTimerController.customMinutes(from: "1.5"))
+        XCTAssertNil(SleepTimerController.customMinutes(from: "721"))
+        XCTAssertEqual(SleepTimerController.customMinutes(from: " 1 "), 1)
+        XCTAssertEqual(SleepTimerController.customMinutes(from: "720"), 720)
+
+        XCTAssertFalse(controller.start(customMinutes: "invalid"))
+        XCTAssertNil(controller.deadline)
+        XCTAssertTrue(controller.start(customMinutes: "3"))
+        XCTAssertEqual(controller.deadline, current.addingTimeInterval(180))
+    }
+
     func testSleepTimerReplacesCancelsAndPausesOnceAfterWake() {
         var current = Date(timeIntervalSinceReferenceDate: 1000)
         var pauseCount = 0

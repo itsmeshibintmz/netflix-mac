@@ -76,3 +76,4 @@ Short overview summary of what this release is about.
 | v2.3.3  | Dock Cleanup and Menu Bar Removal 🛠️ |
 | v2.4.0  | Sleep Timer ⏲️ |
 | v2.4.1  | Now Playing Cleanup 🛠️ |
+| v2.4.2  | Custom Sleep Timer ⏲️ |
