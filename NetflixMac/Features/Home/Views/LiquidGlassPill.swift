@@ -10,15 +10,51 @@ struct LiquidGlassPill: View {
     let goForwardAction: () -> Void
     let reloadAction: () -> Void
     let homeAction: () -> Void
+    let miniPlayerAction: () -> Void
+    let isMiniPlayer: Bool
+    let canToggleMiniPlayer: Bool
 
     @Binding var isHoveredSelf: Bool
     @AppStorage("pureOledBlack") private var pureOledBlack = false
+    @ObservedObject private var nowPlaying = NowPlayingManager.shared
 
     // Hover state specifically for the SettingsLink button
     @State private var isSettingsHovered = false
 
     var body: some View {
         HStack(spacing: 20) {
+            if isMiniPlayer {
+                Button(action: { nowPlaying.togglePlayPause() }) {
+                    Image(systemName: nowPlaying.isPlaying ? "pause.fill" : "play.fill")
+                        .frame(width: 32, height: 32)
+                }
+                .buttonStyle(.plain)
+                .disabled(nowPlaying.title == nil)
+                .help(nowPlaying.isPlaying ? "Pause" : "Play")
+                .accessibilityLabel(nowPlaying.isPlaying ? "Pause" : "Play")
+            } else {
+                normalControls
+            }
+
+            Button(action: miniPlayerAction) {
+                Image(systemName: isMiniPlayer ? "macwindow" : "rectangle.inset.bottomright")
+                    .frame(width: 32, height: 32)
+            }
+            .buttonStyle(.plain)
+            .disabled(!canToggleMiniPlayer)
+            .help(canToggleMiniPlayer ? (isMiniPlayer ? "Exit Mini Player" : "Enter Mini Player") : "Exit fullscreen to use Mini Player")
+            .accessibilityLabel(isMiniPlayer ? "Exit Mini Player" : "Enter Mini Player")
+        }
+        .padding(.horizontal, 22)
+        .padding(.vertical, 10)
+        .liquidGlass(cornerRadius: 24) // Apply custom specular gradient highlight & 3D borders
+        .onHover { hovering in
+            isHoveredSelf = hovering
+        }
+    }
+
+    @ViewBuilder
+    private var normalControls: some View {
             // 1. Back button
             PillButton(icon: "chevron.left", isEnabled: canGoBack, activeColor: Color.netflixRed) {
                 goBackAction()
@@ -93,13 +129,6 @@ struct LiquidGlassPill: View {
                     isSettingsHovered = hovering
                 }
             }
-        }
-        .padding(.horizontal, 22)
-        .padding(.vertical, 10)
-        .liquidGlass(cornerRadius: 24) // Apply custom specular gradient highlight & 3D borders
-        .onHover { hovering in
-            isHoveredSelf = hovering
-        }
     }
 
     // Shared visual label for settings button

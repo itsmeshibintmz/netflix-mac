@@ -28,6 +28,7 @@ A beautiful, fast, and modern macOS client built with SwiftUI and Apple's latest
 - 📺 Responsive layouts
 - 🔄 Frequent updates
 - 🎛️ Optional menu bar playback controls
+- 🪟 Compact, always-on-top mini player window
 
 More features coming soon.
 
@@ -50,6 +51,8 @@ Download the latest release from the Releases page.
 Drag the app into Applications and launch.
 
 To enable menu bar controls, open Settings with ⌘, and turn on **Menu Bar → Keep Netflix in the Menu Bar**. Hide the app to keep playback running; closing the window stops playback but keeps the app available in the menu bar.
+
+Use the mini player button in the floating navigation dock, or **Playback → Enter Mini Player** (⇧⌘M), to shrink the existing window and keep it above other windows. Use the button or shortcut again to restore it. Exit fullscreen first; this is a compact app window, not Picture in Picture.
 
 ## Maintainer Release Build
 

@@ -7,12 +7,13 @@ import SwiftUI
 struct NetflixMacApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @ObservedObject private var updateManager = UpdateManager.shared
+    @StateObject private var miniPlayer = MiniPlayerController()
     @AppStorage("keepRunningInMenuBar") private var keepRunningInMenuBar = false
 
     var body: some Scene {
         Window("Netflix", id: "main") {
-            NetflixWebViewContainer()
-                .frame(minWidth: 1024, minHeight: 680)
+            NetflixWebViewContainer(miniPlayer: miniPlayer)
+                .frame(minWidth: 360, minHeight: 230)
                 .preferredColorScheme(.dark)
         }
         .windowStyle(.hiddenTitleBar)
@@ -27,6 +28,14 @@ struct NetflixMacApp: App {
                     updateManager.checkForUpdates(manual: true)
                 }
                 .disabled(updateManager.isCheckingForUpdates)
+            }
+
+            CommandMenu("Playback") {
+                Button(miniPlayer.isActive ? "Exit Mini Player" : "Enter Mini Player") {
+                    miniPlayer.toggle()
+                }
+                .keyboardShortcut("m", modifiers: [.command, .shift])
+                .disabled(!miniPlayer.canToggle)
             }
         }
 

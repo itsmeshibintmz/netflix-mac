@@ -8,6 +8,7 @@ struct NetflixWebViewContainer: View {
     @State private var canGoForward = false
     @State private var isLoading = false
     @State private var commandCoordinator = NetflixWebView.CommandCoordinator()
+    @ObservedObject var miniPlayer: MiniPlayerController
 
     // Binge watching + Appearance settings from UserDefaults
     @AppStorage("autoSkipIntro") private var autoSkipIntro = true
@@ -55,6 +56,9 @@ struct NetflixWebViewContainer: View {
                 goForwardAction: { commandCoordinator.goForwardAction?() },
                 reloadAction: { commandCoordinator.reloadAction?() },
                 homeAction: { commandCoordinator.loadHomeAction?() },
+                miniPlayerAction: { miniPlayer.toggle() },
+                isMiniPlayer: miniPlayer.isActive,
+                canToggleMiniPlayer: miniPlayer.canToggle,
                 isHoveredSelf: $isHoveringPill
             )
             .padding(.bottom, 24)
@@ -63,6 +67,7 @@ struct NetflixWebViewContainer: View {
             .allowsHitTesting(showPill || isHoveringPill)
             .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showPill || isHoveringPill)
         }
+        .background(MiniPlayerWindowObserver(controller: miniPlayer).frame(width: 0, height: 0))
         .preferredColorScheme(.dark)
         // Detect mouse movement inside the window using continuous hover tracking
         .onContinuousHover { phase in
