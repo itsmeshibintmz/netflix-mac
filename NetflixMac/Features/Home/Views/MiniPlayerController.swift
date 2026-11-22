@@ -16,6 +16,7 @@ final class MiniPlayerController: ObservableObject {
     private var fullScreenObserver: NSObjectProtocol?
     private var exitFullScreenObserver: NSObjectProtocol?
     private var closeObserver: NSObjectProtocol?
+    private var keyboardMonitor: Any?
 
     func attach(to window: NSWindow) {
         guard self.window !== window else { return }
@@ -46,6 +47,21 @@ final class MiniPlayerController: ObservableObject {
             self.hasWindow = false
             self.isFullScreen = false
         }
+        keyboardMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            guard let self else { return event }
+            return self.handleShortcut(event)
+        }
+    }
+
+    func handleShortcut(_ event: NSEvent) -> NSEvent? {
+        let modifiers = event.modifierFlags.intersection([.command, .shift, .control, .option])
+        guard event.window === window, canToggle,
+              modifiers == [.command, .shift],
+              event.charactersIgnoringModifiers?.lowercased() == "m" else { return event }
+        if !event.isARepeat {
+            toggle()
+        }
+        return nil
     }
 
     func toggle() {
@@ -87,9 +103,11 @@ final class MiniPlayerController: ObservableObject {
         if let fullScreenObserver { NotificationCenter.default.removeObserver(fullScreenObserver) }
         if let exitFullScreenObserver { NotificationCenter.default.removeObserver(exitFullScreenObserver) }
         if let closeObserver { NotificationCenter.default.removeObserver(closeObserver) }
+        if let keyboardMonitor { NSEvent.removeMonitor(keyboardMonitor) }
         fullScreenObserver = nil
         exitFullScreenObserver = nil
         closeObserver = nil
+        keyboardMonitor = nil
     }
 
     deinit {

@@ -107,6 +107,53 @@ final class MenuBarTests: XCTestCase {
         wait(for: [probe.paused!], timeout: 10)
     }
 
+    func testMuteControlsAndExternalVolumeChangesStayInSync() throws {
+        _ = NSApplication.shared
+        let manager = NowPlayingManager.shared
+        manager.clearNowPlaying()
+        let player = NetflixWebView(
+            url: URL(string: "about:blank")!,
+            canGoBack: .constant(false), canGoForward: .constant(false), isLoading: .constant(false),
+            commandCoordinator: NetflixWebView.CommandCoordinator(),
+            autoSkipIntro: false, autoPlayNext: false, pureOledBlack: false
+        )
+        let window = NSWindow(contentRect: NSRect(x: 200, y: 200, width: 800, height: 600),
+                              styleMask: [.titled], backing: .buffered, defer: false)
+        window.contentView = NSHostingView(rootView: player)
+        window.contentView?.layoutSubtreeIfNeeded()
+        let webView = try XCTUnwrap(manager.webView)
+        defer {
+            window.contentView = nil
+            manager.webView = nil
+            manager.clearNowPlaying()
+        }
+
+        let ready = expectation(description: "player state available")
+        let readySubscription = manager.$title.dropFirst().first(where: { $0 != nil }).sink { _ in ready.fulfill() }
+        webView.loadHTMLString("<title>Watch Example | Netflix</title><video></video>",
+                               baseURL: URL(string: "https://www.netflix.com/watch/test")!)
+        wait(for: [ready], timeout: 10)
+        XCTAssertFalse(manager.isMuted)
+
+        let muted = expectation(description: "mute reflected in app state")
+        let mutedSubscription = manager.$isMuted.dropFirst().first(where: { $0 }).sink { _ in muted.fulfill() }
+        manager.toggleMute()
+        wait(for: [muted], timeout: 10)
+        withExtendedLifetime(mutedSubscription) {}
+
+        let unmuted = expectation(description: "unmute reflected in app state")
+        let unmutedSubscription = manager.$isMuted.dropFirst().first(where: { !$0 }).sink { _ in unmuted.fulfill() }
+        manager.toggleMute()
+        wait(for: [unmuted], timeout: 10)
+        withExtendedLifetime(unmutedSubscription) {}
+
+        let externallyMuted = expectation(description: "external mute reflected in app state")
+        let externalSubscription = manager.$isMuted.dropFirst().first(where: { $0 }).sink { _ in externallyMuted.fulfill() }
+        webView.evaluateJavaScript("document.querySelector('video').muted = true")
+        wait(for: [externallyMuted], timeout: 10)
+        withExtendedLifetime((readySubscription, externalSubscription)) {}
+    }
+
     func testDismantlingOnlyClearsTheActiveWebView() {
         _ = NSApplication.shared
         let view = NetflixWebView(

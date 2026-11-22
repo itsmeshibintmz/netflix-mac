@@ -14,6 +14,7 @@ final class NowPlayingManager: NSObject, ObservableObject {
 
     @Published private(set) var title: String?
     @Published private(set) var isPlaying = false
+    @Published private(set) var isMuted = false
 
     private var currentArtworkURL: String = ""
     private var currentArtworkImage: NSImage? = nil
@@ -100,6 +101,22 @@ final class NowPlayingManager: NSObject, ObservableObject {
         }
     }
 
+    func toggleMute() {
+        executeJS("""
+            (() => {
+                const video = document.querySelector('video');
+                if (!video) throw new Error('No video is available');
+                video.muted = !video.muted;
+            })();
+            """)
+    }
+
+    func updateMutedState(_ isMuted: Bool) {
+        if self.isMuted != isMuted {
+            self.isMuted = isMuted
+        }
+    }
+
     private func executeJS(_ code: String) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -153,6 +170,7 @@ final class NowPlayingManager: NSObject, ObservableObject {
     func clearNowPlaying() {
         title = nil
         isPlaying = false
+        isMuted = false
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         MPNowPlayingInfoCenter.default().playbackState = .stopped
         MPRemoteCommandCenter.shared().nextTrackCommand.isEnabled = false

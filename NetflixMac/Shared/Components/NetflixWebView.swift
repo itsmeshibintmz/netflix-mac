@@ -325,6 +325,7 @@ struct NetflixWebView: NSViewRepresentable {
                         duration: video.duration || 0,
                         currentTime: video.currentTime || 0,
                         isPlaying: !video.paused,
+                        isMuted: video.muted,
                         artworkURL: artwork.length > 0 ? artwork[0].src : "",
                         hasNext: hasNext
                     });
@@ -409,7 +410,7 @@ struct NetflixWebView: NSViewRepresentable {
                 if (el) {
                     if (video !== el) {
                         video = el;
-                        ['play', 'pause', 'durationchange', 'seeking', 'seeked'].forEach(evt => {
+                        ['play', 'pause', 'durationchange', 'seeking', 'seeked', 'volumechange'].forEach(evt => {
                             video.addEventListener(evt, updateMediaSession);
                         });
                     }
@@ -615,6 +616,9 @@ struct NetflixWebView: NSViewRepresentable {
                     let duration = body["duration"] as? Double ?? 0
                     let currentTime = body["currentTime"] as? Double ?? 0
                     let isPlaying = body["isPlaying"] as? Bool ?? false
+                    if let isMuted = body["isMuted"] as? Bool {
+                        NowPlayingManager.shared.updateMutedState(isMuted)
+                    }
                     let artworkURL = body["artworkURL"] as? String
                     let hasNext = body["hasNext"] as? Bool ?? false
                     NowPlayingManager.shared.updateNowPlaying(

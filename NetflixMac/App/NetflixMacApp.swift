@@ -46,7 +46,7 @@ struct NetflixMacApp: App {
         }
 
         MenuBarExtra("Netflix", systemImage: "play.tv", isInserted: $keepRunningInMenuBar) {
-            NetflixMenuBar()
+            NetflixMenuBar(miniPlayer: miniPlayer)
         }
     }
 }
@@ -54,6 +54,7 @@ struct NetflixMacApp: App {
 private struct NetflixMenuBar: View {
     @Environment(\.openWindow) private var openWindow
     @ObservedObject private var nowPlaying = NowPlayingManager.shared
+    @ObservedObject var miniPlayer: MiniPlayerController
 
     var body: some View {
         Text(nowPlaying.title ?? "Nothing playing")
@@ -63,7 +64,19 @@ private struct NetflixMenuBar: View {
         }
         .disabled(nowPlaying.title == nil)
 
+        Button(nowPlaying.isMuted ? "Unmute" : "Mute") {
+            nowPlaying.toggleMute()
+        }
+        .disabled(nowPlaying.title == nil)
+
         Divider()
+
+        Button(miniPlayer.isActive ? "Exit Mini Player" : "Enter Mini Player") {
+            NSApp.unhide(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            miniPlayer.toggle()
+        }
+        .disabled(!miniPlayer.canToggle)
 
         Button("Open Netflix") {
             openWindow(id: "main")

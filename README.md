@@ -52,7 +52,9 @@ Drag the app into Applications and launch.
 
 To enable menu bar controls, open Settings with ⌘, and turn on **Menu Bar → Keep Netflix in the Menu Bar**. Hide the app to keep playback running; closing the window stops playback but keeps the app available in the menu bar.
 
-Use the mini player button in the floating navigation dock, or **Playback → Enter Mini Player** (⇧⌘M), to shrink the existing window and keep it above other windows. Use the button or shortcut again to restore it. Exit fullscreen first; this is a compact app window, not Picture in Picture.
+Use the mini player button in the floating navigation dock, **Playback → Enter Mini Player** in the app's menu bar, or **Enter Mini Player** in the optional Netflix menu bar icon to shrink the existing window and keep it above other windows. With the Netflix window focused, ⇧⌘M also toggles mini player. Use the same control again to restore it. The Netflix window must be open and outside fullscreen; this is a compact app window, not Picture in Picture.
+
+Mute or unmute using Netflix's **M** key, the mini-player speaker button, or the optional menu bar icon. These controls affect Netflix playback, not the Mac's system volume.
 
 ## Maintainer Release Build
 

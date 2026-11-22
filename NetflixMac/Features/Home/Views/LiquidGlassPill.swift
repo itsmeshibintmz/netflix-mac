@@ -32,6 +32,15 @@ struct LiquidGlassPill: View {
                 .disabled(nowPlaying.title == nil)
                 .help(nowPlaying.isPlaying ? "Pause" : "Play")
                 .accessibilityLabel(nowPlaying.isPlaying ? "Pause" : "Play")
+
+                Button(action: { nowPlaying.toggleMute() }) {
+                    Image(systemName: nowPlaying.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                        .frame(width: 32, height: 32)
+                }
+                .buttonStyle(.plain)
+                .disabled(nowPlaying.title == nil)
+                .help(nowPlaying.isMuted ? "Unmute" : "Mute")
+                .accessibilityLabel(nowPlaying.isMuted ? "Unmute" : "Mute")
             } else {
                 normalControls
             }
