@@ -72,3 +72,4 @@ Short overview summary of what this release is about.
 | v2.2.1  | Now Playing Cleanup 🛠️ |
 | v2.3.0  | Mini Player 🎬 |
 | v2.3.1  | Mini Player Shortcut and Mute Controls 🛠️ |
+| v2.3.2  | Mini Player and Mute Controls Re-release 🛠️ |
