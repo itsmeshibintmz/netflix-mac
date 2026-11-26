@@ -78,3 +78,4 @@ Short overview summary of what this release is about.
 | v2.4.1  | Now Playing Cleanup 🛠️ |
 | v2.4.2  | Custom Sleep Timer ⏲️ |
 | v2.4.3  | Window Layout Adjustment 🛠️ |
+| v2.4.4  | Dock Overlay Cleanup 🛠️ |

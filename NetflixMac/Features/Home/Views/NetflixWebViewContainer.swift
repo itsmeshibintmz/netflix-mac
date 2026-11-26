@@ -49,23 +49,22 @@ struct NetflixWebViewContainer: View {
             }
 
             // Floating Liquid Glass Control Pill Dock
-            LiquidGlassPill(
-                canGoBack: canGoBack,
-                canGoForward: canGoForward,
-                goBackAction: { commandCoordinator.goBackAction?() },
-                goForwardAction: { commandCoordinator.goForwardAction?() },
-                reloadAction: { commandCoordinator.reloadAction?() },
-                homeAction: { commandCoordinator.loadHomeAction?() },
-                miniPlayerAction: { miniPlayer.toggle() },
-                isMiniPlayer: miniPlayer.isActive,
-                canToggleMiniPlayer: miniPlayer.canToggle,
-                isHoveredSelf: $isHoveringPill
-            )
-            .padding(.bottom, 24)
-            .offset(y: (showPill || isHoveringPill) ? 0 : 80)
-            .opacity((showPill || isHoveringPill) ? 1.0 : 0.0)
-            .allowsHitTesting(showPill || isHoveringPill)
-            .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showPill || isHoveringPill)
+            if showPill || isHoveringPill {
+                LiquidGlassPill(
+                    canGoBack: canGoBack,
+                    canGoForward: canGoForward,
+                    goBackAction: { commandCoordinator.goBackAction?() },
+                    goForwardAction: { commandCoordinator.goForwardAction?() },
+                    reloadAction: { commandCoordinator.reloadAction?() },
+                    homeAction: { commandCoordinator.loadHomeAction?() },
+                    miniPlayerAction: { miniPlayer.toggle() },
+                    isMiniPlayer: miniPlayer.isActive,
+                    canToggleMiniPlayer: miniPlayer.canToggle,
+                    isHoveredSelf: $isHoveringPill
+                )
+                .padding(.bottom, 24)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
         }
         .background(MiniPlayerWindowObserver(controller: miniPlayer).frame(width: 0, height: 0))
         .preferredColorScheme(.dark)

@@ -6,14 +6,14 @@ import SwiftUI
 // MARK: - Liquid Glass Modifier
 struct LiquidGlassModifier: ViewModifier {
     var cornerRadius: CGFloat
-    var material: Material
+    var material: Material?
     var shadowRadius: CGFloat
 
     func body(content: Content) -> some View {
         content
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(material)
+                    .fill(material.map(AnyShapeStyle.init) ?? AnyShapeStyle(Color.black.opacity(0.55)))
                     .overlay {
                         // Gradient tint
                         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
@@ -36,7 +36,7 @@ struct LiquidGlassModifier: ViewModifier {
                                 lineWidth: 0.8
                             )
                     }
-                    .shadow(color: Color.glassShadow, radius: shadowRadius, y: 8)
+                    .shadow(color: shadowRadius > 0 ? Color.glassShadow : .clear, radius: shadowRadius, y: 8)
             }
     }
 }
@@ -79,7 +79,7 @@ struct GlowModifier: ViewModifier {
 extension View {
     func liquidGlass(
         cornerRadius: CGFloat = 16,
-        material: Material = .ultraThinMaterial,
+        material: Material? = .ultraThinMaterial,
         shadowRadius: CGFloat = 20
     ) -> some View {
         modifier(LiquidGlassModifier(

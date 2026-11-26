@@ -62,7 +62,8 @@ struct LiquidGlassPill: View {
         }
         .padding(.horizontal, 22)
         .padding(.vertical, 10)
-        .liquidGlass(cornerRadius: 24) // Apply custom specular gradient highlight & 3D borders
+        // Flat fill without blur or shadow: blur layers over the DRM video surface render as faint rectangles
+        .liquidGlass(cornerRadius: 24, material: nil, shadowRadius: 0)
         .onHover { hovering in
             isHoveredSelf = hovering
         }
