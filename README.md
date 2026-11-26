@@ -52,6 +52,8 @@ Drag the app into Applications and launch.
 
 Use the mini player button in the floating navigation dock or **Playback → Enter Mini Player** in the app's menu bar to shrink the existing window and keep it above other windows. With the Netflix window focused, ⇧⌘M also toggles mini player. Use the same control again to restore it. The Netflix window must be open and outside fullscreen; this is a compact app window, not Picture in Picture.
 
+The normal window has a minimum content size of 1024 × 680 points; the mini player can be smaller.
+
 Mute or unmute using Netflix's **M** key or the mini-player speaker button. These controls affect Netflix playback, not the Mac's system volume.
 
 Choose **Playback → Sleep Timer** and a preset or custom duration to pause Netflix automatically. Select another duration to replace the timer, or choose **Cancel Sleep Timer** to cancel it. The menu shows when playback will pause. The timer only runs while the app is open; if the Mac sleeps past the deadline, playback is paused after it wakes.

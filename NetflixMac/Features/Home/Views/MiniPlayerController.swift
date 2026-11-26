@@ -3,6 +3,10 @@ import Combine
 import SwiftUI
 
 final class MiniPlayerController: ObservableObject {
+    static let normalMinimumContentSize = NSSize(width: 1024, height: 680)
+    static let miniMinimumContentSize = NSSize(width: 360, height: 230)
+    static let miniContentSize = NSSize(width: 480, height: 300)
+
     @Published private(set) var isActive = false
     @Published private(set) var isFullScreen = false
     @Published private(set) var hasWindow = false
@@ -24,7 +28,12 @@ final class MiniPlayerController: ObservableObject {
         removeObservers()
         self.window = window
         hasWindow = true
-        window.contentMinSize = NSSize(width: 1024, height: 680)
+        window.contentMinSize = Self.normalMinimumContentSize
+        if window.contentRect(forFrameRect: window.frame).width < Self.normalMinimumContentSize.width ||
+            window.contentRect(forFrameRect: window.frame).height < Self.normalMinimumContentSize.height {
+            window.setContentSize(Self.normalMinimumContentSize)
+            window.center()
+        }
         isFullScreen = window.styleMask.contains(.fullScreen)
         fullScreenObserver = NotificationCenter.default.addObserver(
             forName: NSWindow.willEnterFullScreenNotification, object: window, queue: .main
@@ -74,9 +83,9 @@ final class MiniPlayerController: ObservableObject {
         originalFrame = window.frame
         originalMinimumSize = window.contentMinSize
         originalLevel = window.level
-        window.contentMinSize = NSSize(width: 360, height: 230)
+        window.contentMinSize = Self.miniMinimumContentSize
         window.level = .floating
-        let size = window.frameRect(forContentRect: NSRect(x: 0, y: 0, width: 480, height: 300)).size
+        let size = window.frameRect(forContentRect: NSRect(origin: .zero, size: Self.miniContentSize)).size
         var frame = NSRect(x: window.frame.maxX - size.width, y: window.frame.maxY - size.height,
                            width: size.width, height: size.height)
         if let screen = window.screen {

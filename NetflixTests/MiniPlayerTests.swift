@@ -3,6 +3,17 @@ import Combine
 import SwiftUI
 import XCTest
 
+private struct MiniPlayerSizingFixture: View {
+    @ObservedObject var controller: MiniPlayerController
+
+    var body: some View {
+        Color.black.frame(
+            minWidth: controller.isActive ? MiniPlayerController.miniMinimumContentSize.width : MiniPlayerController.normalMinimumContentSize.width,
+            minHeight: controller.isActive ? MiniPlayerController.miniMinimumContentSize.height : MiniPlayerController.normalMinimumContentSize.height
+        )
+    }
+}
+
 @MainActor
 final class MiniPlayerTests: XCTestCase {
     func testMiniPlayerShrinksAndRestoresOriginalWindow() {
@@ -26,6 +37,41 @@ final class MiniPlayerTests: XCTestCase {
         XCTAssertEqual(window.frame, originalFrame)
         XCTAssertEqual(window.contentMinSize, originalMinimum)
         XCTAssertEqual(window.level, originalLevel)
+    }
+
+    func testAttachingExpandsAnUndersizedWindowForNormalNetflixLayout() {
+        _ = NSApplication.shared
+        let window = NSWindow(contentRect: NSRect(x: 200, y: 200, width: 800, height: 500),
+                              styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
+        let controller = MiniPlayerController()
+
+        controller.attach(to: window)
+
+        let contentSize = window.contentRect(forFrameRect: window.frame).size
+        XCTAssertGreaterThanOrEqual(contentSize.width, MiniPlayerController.normalMinimumContentSize.width)
+        XCTAssertGreaterThanOrEqual(contentSize.height, MiniPlayerController.normalMinimumContentSize.height)
+        XCTAssertEqual(window.contentMinSize, MiniPlayerController.normalMinimumContentSize)
+    }
+
+    func testStateDrivenSwiftUIMinimumAllowsMiniPlayerAndRestoresWindow() {
+        _ = NSApplication.shared
+        let window = NSWindow(contentRect: NSRect(x: 200, y: 200, width: 1100, height: 720),
+                              styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
+        let controller = MiniPlayerController()
+        window.contentView = NSHostingView(rootView: MiniPlayerSizingFixture(controller: controller))
+        window.contentView?.layoutSubtreeIfNeeded()
+        controller.attach(to: window)
+        let originalFrame = window.frame
+
+        controller.toggle()
+        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+        window.contentView?.layoutSubtreeIfNeeded()
+        XCTAssertEqual(window.contentRect(forFrameRect: window.frame).size, MiniPlayerController.miniContentSize)
+
+        controller.restore()
+        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+        window.contentView?.layoutSubtreeIfNeeded()
+        XCTAssertEqual(window.frame, originalFrame)
     }
 
     func testEnteringFullscreenRestoresWindowAndBlocksMiniPlayer() {

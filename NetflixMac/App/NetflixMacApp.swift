@@ -14,7 +14,14 @@ struct NetflixMacApp: App {
     var body: some Scene {
         Window("Netflix", id: "main") {
             NetflixWebViewContainer(miniPlayer: miniPlayer)
-                .frame(minWidth: 360, minHeight: 230)
+                .frame(
+                    minWidth: miniPlayer.isActive
+                        ? MiniPlayerController.miniMinimumContentSize.width
+                        : MiniPlayerController.normalMinimumContentSize.width,
+                    minHeight: miniPlayer.isActive
+                        ? MiniPlayerController.miniMinimumContentSize.height
+                        : MiniPlayerController.normalMinimumContentSize.height
+                )
                 .preferredColorScheme(.dark)
                 .alert("Sleep Timer", isPresented: Binding(
                     get: { sleepTimer.errorMessage != nil },
