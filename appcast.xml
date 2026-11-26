@@ -6,6 +6,13 @@
         <description>Most recent updates for Netflix for macOS.</description>
         <language>en</language>
         <item>
+            <title>Version 2.4.3</title>
+            <sparkle:releaseNotesLink>https://github.com/itsmeshibintmz/netflix-mac/releases/tag/v.2.4.3</sparkle:releaseNotesLink>
+            <pubDate>Thu, 26 Nov 2026 11:38:02 +0530</pubDate>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/itsmeshibintmz/netflix-mac/releases/download/v.2.4.3/Netflix.dmg" sparkle:version="2.4.3" sparkle:shortVersionString="2.4.3" sparkle:edSignature="AVed/H5aYDb0o5J9zQ/BOyFxcuR0abhbAhsZP7dpZRYAUbTjRxde311k01Cn2t7XFxfmIcWAioH95OLh7lTsBA==" length="3487023" type="application/octet-stream" />
+        </item>
+        <item>
             <title>Version 2.4.2</title>
             <sparkle:releaseNotesLink>https://github.com/itsmeshibintmz/netflix-mac/releases/tag/v.2.4.2</sparkle:releaseNotesLink>
             <pubDate>Sun, 22 Nov 2026 13:14:15 +0530</pubDate>
