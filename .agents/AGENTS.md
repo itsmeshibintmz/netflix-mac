@@ -80,3 +80,4 @@ Short overview summary of what this release is about.
 | v2.4.3  | Window Layout Adjustment 🛠️ |
 | v2.4.4  | Dock Overlay Cleanup 🛠️ |
 | v2.4.5  | Profile Lock Icon Fix 🛠️ |
+| v2.4.6  | Faster Profile Lock Layout 🛠️ |

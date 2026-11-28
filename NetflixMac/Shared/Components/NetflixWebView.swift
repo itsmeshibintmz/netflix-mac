@@ -31,7 +31,6 @@ struct NetflixWebView: NSViewRepresentable {
         if (window.__macFlixProfileFix) { return; }
         var MARGIN = 12;
         var target = null;
-        var timer = null;
 
         function isPicker() {
             return !document.querySelector('.pinning-header, video');
@@ -62,16 +61,11 @@ struct NetflixWebView: NSViewRepresentable {
             }
         }
 
-        function schedule() {
-            clearTimeout(timer);
-            timer = setTimeout(apply, 150);
-        }
-
         window.__macFlixProfileFix = { apply: apply };
-        new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
-        window.addEventListener('resize', schedule);
-        schedule();
-        setTimeout(apply, 1000);
+        new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
+        window.addEventListener('resize', apply);
+        document.addEventListener('load', apply, true);
+        apply();
     })();
     """
 
