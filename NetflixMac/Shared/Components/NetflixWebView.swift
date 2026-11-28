@@ -23,6 +23,58 @@ struct NetflixWebView: NSViewRepresentable {
         var loadHomeAction: (() -> Void)?
     }
 
+    /// Netflix's profile picker places the Profile Lock icon in an absolutely positioned block above the
+    /// avatars. In windows shorter than ~730pt it ends up above the viewport and can't be scrolled to.
+    /// This nudges the block down just enough to keep the icon visible (class names are hashed, so it is structural).
+    static let profilePickerFixSource = """
+    (function() {
+        if (window.__macFlixProfileFix) { return; }
+        var MARGIN = 12;
+        var target = null;
+        var timer = null;
+
+        function isPicker() {
+            return !document.querySelector('.pinning-header, video');
+        }
+
+        function findLockIcon() {
+            var imgs = document.querySelectorAll('img');
+            for (var i = 0; i < imgs.length; i++) {
+                var r = imgs[i].getBoundingClientRect();
+                if (r.width < 100 || r.width > 200 || Math.abs(r.width - r.height) > 8 || r.top >= 120) { continue; }
+                var node = imgs[i].parentElement;
+                while (node && getComputedStyle(node).position !== 'absolute') { node = node.parentElement; }
+                if (node && node.parentElement) { return { top: r.top, holder: node.parentElement }; }
+            }
+            return null;
+        }
+
+        function apply() {
+            if (target) { target.style.removeProperty('top'); target = null; }
+            if (!isPicker()) { return; }
+            var icon = findLockIcon();
+            if (!icon) { return; }
+            var need = Math.ceil(MARGIN - icon.top);
+            if (need > 0) {
+                if (getComputedStyle(icon.holder).position === 'static') { icon.holder.style.position = 'relative'; }
+                icon.holder.style.setProperty('top', need + 'px', 'important');
+                target = icon.holder;
+            }
+        }
+
+        function schedule() {
+            clearTimeout(timer);
+            timer = setTimeout(apply, 150);
+        }
+
+        window.__macFlixProfileFix = { apply: apply };
+        new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+        window.addEventListener('resize', schedule);
+        schedule();
+        setTimeout(apply, 1000);
+    })();
+    """
+
     func makeCoordinator() -> WebViewCoordinator {
         WebViewCoordinator(self)
     }
@@ -86,6 +138,9 @@ struct NetflixWebView: NSViewRepresentable {
         """
         let cssScript = WKUserScript(source: cssSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         configuration.userContentController.addUserScript(cssScript)
+
+        let profilePickerScript = WKUserScript(source: Self.profilePickerFixSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(profilePickerScript)
 
         // 3. Inject JS script to feed video metadata to MediaSession API and execute background loop (Auto Skip/Play Next)
         let jsSource = """

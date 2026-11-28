@@ -22,7 +22,7 @@ A beautiful, fast, and modern macOS client built with SwiftUI and Apple's latest
 - 💎 Liquid Glass design with a flat, blur-free floating dock that stays clear of video playback
 - ⚡ Native performance
 - 🌙 Beautiful dark mode
-- 🖥️ Fullscreen support
+- 🖥️ Fullscreen support, with the profile picker's Profile Lock icon kept visible in smaller windows
 - ⌨️ Native keyboard shortcuts
 - 🎬 Smooth video playback
 - 📺 Responsive layouts

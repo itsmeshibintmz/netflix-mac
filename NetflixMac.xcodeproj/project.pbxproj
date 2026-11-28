@@ -27,6 +27,7 @@
 		AB0000000000000000000003 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000A1 /* UpdateManager.swift */; };
 		AB0000000000000000000004 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = AB0000000000000000000005 /* Sparkle */; };
 		AB000000000000000000000E /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AB000000000000000000000F /* AppIcon.icon */; };
+		AB00000000000000000000F1 /* ProfilePickerFixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00000000000000000000F2 /* ProfilePickerFixTests.swift */; };
 		AB0000000000000000000010 /* PlaybackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000011 /* PlaybackTests.swift */; };
 		AB0000000000000000000012 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF01000000000002 /* AppDelegate.swift */; };
 		AB0000000000000000000013 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF010000000000B2 /* NowPlayingManager.swift */; };
@@ -60,6 +61,7 @@
 		AB0000000000000000000002 /* UpdateManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManagerTests.swift; sourceTree = "<group>"; };
 		AB0000000000000000000006 /* NetflixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NetflixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB000000000000000000000F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		AB00000000000000000000F2 /* ProfilePickerFixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePickerFixTests.swift; sourceTree = "<group>"; };
 		AB0000000000000000000011 /* PlaybackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackTests.swift; sourceTree = "<group>"; };
 		AB0000000000000000000017 /* MiniPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerController.swift; sourceTree = "<group>"; };
 		AB000000000000000000001A /* MiniPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerTests.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 			children = (
 				AB0000000000000000000002 /* UpdateManagerTests.swift */,
 				AB0000000000000000000011 /* PlaybackTests.swift */,
+				AB00000000000000000000F2 /* ProfilePickerFixTests.swift */,
 				AB000000000000000000001A /* MiniPlayerTests.swift */,
 			);
 			path = NetflixTests;
@@ -343,6 +346,7 @@
 				AB0000000000000000000001 /* UpdateManagerTests.swift in Sources */,
 				AB0000000000000000000003 /* UpdateManager.swift in Sources */,
 				AB0000000000000000000010 /* PlaybackTests.swift in Sources */,
+				AB00000000000000000000F1 /* ProfilePickerFixTests.swift in Sources */,
 				AB0000000000000000000012 /* AppDelegate.swift in Sources */,
 				AB0000000000000000000013 /* NowPlayingManager.swift in Sources */,
 				AB0000000000000000000014 /* NetflixWebView.swift in Sources */,
@@ -487,7 +491,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 2.4.4;
+				MARKETING_VERSION = 2.4.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -514,7 +518,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 2.4.4;
+				MARKETING_VERSION = 2.4.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.Netflix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
